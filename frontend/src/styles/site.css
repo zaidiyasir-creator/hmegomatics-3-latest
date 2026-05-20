@@ -42,7 +42,7 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: clamp(15px, 1vw, 17px);
+  font-size: clamp(16px, 1.1vw, 18px);
   line-height: 1.55;
 }
 
@@ -55,7 +55,7 @@ body {
 .eyebrow {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10.5px, 0.85vw, 12.5px);
+  font-size: clamp(12px, 1vw, 14px);
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--gold);
@@ -64,7 +64,7 @@ body {
 .eyebrow-muted {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(10.5px, 0.85vw, 12.5px);
+  font-size: clamp(12px, 1vw, 14px);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -72,10 +72,10 @@ body {
 
 .gold-bar {
   display: inline-block;
-  width: 44px;
+  width: 48px;
   height: 0.5px;
   background: var(--gold);
-  margin: 20px 0;
+  margin: 22px 0;
 }
 
 .section-heading {
@@ -87,8 +87,8 @@ body {
 }
 
 .section-heading.large {
-  font-size: clamp(28px, 3.8vw, 46px);
-  line-height: 1.1;
+  font-size: clamp(34px, 4.4vw, 56px);
+  line-height: 1.08;
 }
 
 .section-heading .italic {
@@ -173,14 +173,14 @@ body {
 .nav-brand-name {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10.5px, 0.85vw, 12.5px);
+  font-size: clamp(12px, 1vw, 14px);
   letter-spacing: 0.3em;
   color: #ede5d5;
 }
 .nav-brand-sub {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(9px, 0.7vw, 10.5px);
+  font-size: clamp(10px, 0.8vw, 12px);
   letter-spacing: 0.26em;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 4px;
@@ -188,13 +188,13 @@ body {
 
 .nav-links {
   display: flex;
-  gap: 42px;
+  gap: 44px;
   align-items: center;
 }
 .nav-link {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(11px, 0.9vw, 13px);
+  font-size: clamp(12px, 1vw, 14px);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.78);
@@ -356,20 +356,20 @@ body {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(15px, 1.4vw, 18px);
-  line-height: 1.6;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.5;
   color: #3a3028;
-  max-width: 580px;
+  max-width: 720px;
   margin: 0;
   position: relative;
 }
 .quote-band blockquote::before {
   content: "“";
   position: absolute;
-  left: -42px;
-  top: -20px;
+  left: -46px;
+  top: -24px;
   font-family: var(--serif);
-  font-size: 80px;
+  font-size: clamp(64px, 6vw, 96px);
   color: var(--gold);
   opacity: 0.4;
   line-height: 1;
@@ -378,17 +378,17 @@ body {
   text-align: right;
   font-family: var(--sans);
   font-weight: 400;
-  font-size: 12.5px;
+  font-size: clamp(14px, 1.1vw, 17px);
   color: var(--text-muted);
   line-height: 1.7;
 }
 .quote-attr .label {
   display: block;
-  font-size: 9.5px;
-  letter-spacing: 0.3em;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   font-weight: 500;
 }
 
@@ -439,25 +439,25 @@ body {
 .service-cell .num {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(12px, 1vw, 14px);
+  font-size: clamp(13px, 1.1vw, 15px);
   letter-spacing: 0.3em;
   color: var(--gold);
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 .service-cell h3 {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(20px, 1.7vw, 26px);
+  font-size: clamp(22px, 1.9vw, 30px);
   color: var(--text-dark);
-  margin: 0 0 16px;
-  line-height: 1.2;
+  margin: 0 0 18px;
+  line-height: 1.18;
 }
 .service-cell p {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  font-size: clamp(14.5px, 1.15vw, 17px);
   color: var(--text-muted);
-  line-height: 1.75;
+  line-height: 1.7;
   margin: 0;
 }
 
@@ -485,7 +485,7 @@ body {
 .about-dark h2 {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(24px, 2.6vw, 36px);
+  font-size: clamp(28px, 3vw, 42px);
   line-height: 1.15;
   margin: 14px 0 0;
 }
@@ -498,11 +498,11 @@ body {
 .about-cream p {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(14.5px, 1.15vw, 17px);
+  font-size: clamp(15.5px, 1.25vw, 18.5px);
   color: var(--text-body);
-  line-height: 1.85;
-  margin: 30px 0 40px;
-  max-width: 540px;
+  line-height: 1.8;
+  margin: 32px 0 44px;
+  max-width: 580px;
 }
 
 .about-stats {
@@ -515,18 +515,18 @@ body {
 .about-stats .num {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(26px, 2.5vw, 36px);
+  font-size: clamp(30px, 2.8vw, 42px);
   color: var(--gold);
   line-height: 1;
 }
 .about-stats .label {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10px, 0.85vw, 12px);
+  font-size: clamp(11px, 0.95vw, 13.5px);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #999;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .values-list {
@@ -546,14 +546,14 @@ body {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(22px, 2vw, 28px);
+  font-size: clamp(24px, 2.2vw, 32px);
   color: rgba(201, 147, 42, 0.42);
-  min-width: 36px;
+  min-width: 40px;
 }
 .values-name {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(11.5px, 1vw, 13.5px);
+  font-size: clamp(12.5px, 1.1vw, 15px);
   letter-spacing: 0.24em;
   color: #cdc5b5;
   text-transform: uppercase;
@@ -619,26 +619,26 @@ body {
 .director h3 {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(20px, 1.9vw, 26px);
+  font-size: clamp(22px, 2vw, 30px);
   color: var(--text-dark);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 .director .role {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(11px, 1vw, 13.5px);
+  font-size: clamp(12px, 1.1vw, 15px);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 .director p {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(14px, 1.15vw, 16.5px);
+  font-size: clamp(15px, 1.25vw, 18.5px);
   color: var(--text-muted);
-  line-height: 1.8;
-  max-width: 720px;
+  line-height: 1.75;
+  max-width: 760px;
   margin: 0 0 32px;
 }
 .qual-tags {
@@ -649,11 +649,11 @@ body {
 .qual-tag {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10.5px, 0.9vw, 12.5px);
+  font-size: clamp(11.5px, 1vw, 14px);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-muted);
-  padding: 8px 16px;
+  padding: 10px 18px;
   border: 0.5px solid var(--border-cream);
   background: #fff;
 }
@@ -713,6 +713,19 @@ body {
   cursor: wait;
 }
 
+.btn-whatsapp {
+  color: #25d366;
+  border-color: rgba(37, 211, 102, 0.7);
+}
+.btn-whatsapp:hover {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+}
+.btn-whatsapp svg {
+  flex-shrink: 0;
+}
+
 /* Enquiry form */
 .enquiry-form {
   margin-top: 30px;
@@ -733,21 +746,21 @@ body {
 .field label {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10.5px, 0.9vw, 12px);
+  font-size: clamp(11.5px, 1vw, 13.5px);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .field input,
 .field textarea {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: clamp(14.5px, 1.15vw, 16.5px);
+  font-size: clamp(15.5px, 1.25vw, 18px);
   color: var(--text-dark);
   border: none;
   border-bottom: 0.5px solid var(--border-cream);
-  padding: 12px 0;
+  padding: 14px 0;
   background: transparent;
   outline: none;
   transition: border-color 0.3s ease;
@@ -766,17 +779,17 @@ body {
    ============================================================ */
 .footer {
   background: var(--bg-deeper);
-  padding: 34px 60px;
+  padding: 38px 60px;
   border-top: 0.5px solid rgba(201, 147, 42, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(10.5px, 0.85vw, 12px);
+  font-size: clamp(11.5px, 1vw, 13.5px);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #555;
+  color: #5a5a5a;
 }
 
 /* ============================================================
@@ -792,16 +805,16 @@ body {
 .admin-shell h1 {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(28px, 2.6vw, 38px);
+  font-size: clamp(32px, 3vw, 44px);
   color: var(--gold);
   margin: 0 0 8px;
 }
 .admin-shell .sub {
-  font-size: clamp(11.5px, 0.95vw, 13px);
+  font-size: clamp(12.5px, 1.05vw, 14.5px);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 40px;
+  margin-bottom: 44px;
 }
 .admin-login {
   max-width: 360px;
@@ -828,18 +841,18 @@ body {
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: clamp(13px, 1vw, 15px);
+  font-size: clamp(14px, 1.1vw, 17px);
 }
 .admin-table th,
 .admin-table td {
   text-align: left;
-  padding: 16px 14px;
+  padding: 18px 14px;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
   vertical-align: top;
 }
 .admin-table th {
   font-weight: 500;
-  font-size: clamp(10.5px, 0.85vw, 12px);
+  font-size: clamp(11.5px, 1vw, 13.5px);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--gold);
@@ -960,3 +973,4 @@ body {
   .admin-table { font-size: 13px; }
   .admin-table th, .admin-table td { padding: 12px 8px; }
 }
+
