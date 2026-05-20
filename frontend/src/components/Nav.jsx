@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import HMLogo from "./HMLogo";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react";
 
 const LINKS = [
   { id: "about", label: "About" },
@@ -8,6 +8,8 @@ const LINKS = [
   { id: "director", label: "Leadership" },
   { id: "contact", label: "Contact" },
 ];
+
+const PROFILE_PDF = "/hm-geomatics-2026-profile.pdf";
 
 export default function Nav() {
   const [sticky, setSticky] = useState(false);
@@ -58,6 +60,17 @@ export default function Nav() {
             {l.label}
           </button>
         ))}
+
+        <a
+          href={PROFILE_PDF}
+          download="HM-Geomatics-2026-Business-Profile.pdf"
+          className="nav-link nav-link--cta"
+          data-testid="nav-download-profile"
+          onClick={() => setOpen(false)}
+        >
+          <Download size={14} strokeWidth={1.5} />
+          <span>Co. Profile</span>
+        </a>
       </div>
 
       <button
