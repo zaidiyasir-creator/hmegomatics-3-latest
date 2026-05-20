@@ -213,9 +213,6 @@ export default function Home() {
         </div>
 
         <div className="hero-overlay">
-          <div className="eyebrow" data-testid="hero-eyebrow">
-            LAND SURVEYOR · LICENSED UNDER ACT 458 (REVISED 2024)
-          </div>
           <h1 className="hero-title" data-testid="hero-title">
             <span className="gold">HM</span>GEOMATICS
           </h1>
