@@ -255,6 +255,318 @@ body {
   .hero-canvas.hero-3d { transform: none; }
 }
 
+/* ============================================================
+   LOGO REVEAL HERO
+   ============================================================ */
+.reveal-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  perspective: 2200px;
+  perspective-origin: 50% 42%;
+  background:
+    radial-gradient(ellipse 140% 90% at 50% 35%,
+      #0a1a16 0%, #061410 35%, #02080a 75%, #000 100%);
+}
+.reveal-stage::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: radial-gradient(ellipse 60% 100% at 50% 100%,
+    rgba(201, 147, 42, 0.18) 0%, rgba(201, 147, 42, 0) 70%);
+  pointer-events: none;
+}
+.reveal-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 80% at 50% 50%,
+    rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+/* Brass top edge */
+.reveal-brand-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, #c9932a 15%, #e8c060 50%, #c9932a 85%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+  z-index: 10;
+}
+.reveal-stage.is-playing .reveal-brand-edge {
+  animation: rvEdgeIn 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) 200ms forwards;
+}
+@keyframes rvEdgeIn { to { transform: scaleX(1); } }
+
+/* Corner inscriptions */
+.reveal-corner {
+  position: absolute;
+  z-index: 12;
+  font-family: var(--sans);
+  font-size: clamp(9.5px, 0.8vw, 11.5px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.6);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  font-weight: 500;
+}
+.reveal-stage.is-playing .reveal-corner {
+  animation: rvCornerIn 1200ms cubic-bezier(0.22, 0.61, 0.36, 1) 1400ms forwards;
+}
+@keyframes rvCornerIn { to { opacity: 1; } }
+.reveal-corner.tl { top: 100px; left: 60px; }
+.reveal-corner.tr { top: 100px; right: 60px; text-align: right; line-height: 1.7; }
+.reveal-corner.bl { bottom: 56px; left: 60px; }
+.reveal-corner.br { bottom: 56px; right: 60px; text-align: right; line-height: 1.7; }
+.reveal-corner .v {
+  color: rgba(244, 239, 230, 0.95);
+  display: block;
+}
+
+/* Logo deck — 3D perspective */
+.reveal-logo-deck {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(40vw, 520px);
+  aspect-ratio: 1 / 1;
+  transform-style: preserve-3d;
+  z-index: 5;
+}
+.reveal-logo-pane {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(28deg) rotateX(8deg) scale(0.82);
+  opacity: 0;
+  filter: brightness(0.85) saturate(1.05) contrast(1.05);
+}
+.reveal-stage.is-playing .reveal-logo-pane {
+  animation:
+    rvLogoEntry 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) 900ms forwards,
+    rvLogoFloat 7000ms ease-in-out 3500ms infinite alternate;
+}
+@keyframes rvLogoEntry {
+  0%   { transform: rotateY(28deg) rotateX(8deg) scale(0.82); opacity: 0;
+         filter: brightness(0.6) saturate(0.85); }
+  60%  { opacity: 1; }
+  100% { transform: rotateY(0deg) rotateX(0deg) scale(1); opacity: 1;
+         filter: brightness(1.05) saturate(1.1) contrast(1.05)
+                 drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6))
+                 drop-shadow(0 0 40px rgba(201, 147, 42, 0.22)); }
+}
+@keyframes rvLogoFloat {
+  0%   { transform: rotateY(-2deg) rotateX(0.5deg) scale(1.0); }
+  100% { transform: rotateY(2deg) rotateX(-0.5deg) scale(1.01); }
+}
+.reveal-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Metal gleam — masked by the logo (mask-image set inline to avoid webpack url resolution) */
+.reveal-gleam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: linear-gradient(115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.0) 42%,
+    rgba(255, 245, 220, 0.55) 49%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 245, 220, 0.55) 51%,
+    rgba(255, 255, 255, 0.0) 58%,
+    transparent 70%);
+  background-size: 220% 220%;
+  background-position: 130% -30%;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+}
+.reveal-stage.is-playing .reveal-gleam {
+  animation:
+    rvGleam1 2800ms cubic-bezier(0.4, 0, 0.2, 1) 2800ms forwards,
+    rvGleam2 4000ms cubic-bezier(0.4, 0, 0.2, 1) 6200ms forwards;
+}
+@keyframes rvGleam1 {
+  0%   { opacity: 0; background-position: 130% -30%; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; background-position: -30% 130%; }
+}
+@keyframes rvGleam2 {
+  0%   { opacity: 0; background-position: -30% 130%; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
+  100% { opacity: 0; background-position: 130% -30%; }
+}
+
+/* Halo behind logo */
+.reveal-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80vw, 1000px);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle,
+    rgba(201, 147, 42, 0.22) 0%,
+    rgba(201, 147, 42, 0.08) 25%,
+    rgba(201, 147, 42, 0) 55%);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.reveal-stage.is-playing .reveal-halo {
+  animation:
+    rvHaloIn 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) 800ms forwards,
+    rvHaloBreathe 6000ms ease-in-out 3500ms infinite alternate;
+}
+@keyframes rvHaloIn { to { opacity: 1; } }
+@keyframes rvHaloBreathe {
+  0%   { opacity: 0.9; }
+  100% { opacity: 1.1; }
+}
+
+/* Ground reflection plate */
+.reveal-ground {
+  position: absolute;
+  left: 50%;
+  bottom: 26%;
+  transform: translateX(-50%) rotateX(72deg);
+  width: 36%;
+  height: 6px;
+  background: radial-gradient(ellipse at center,
+    rgba(201, 147, 42, 0.55) 0%, rgba(201, 147, 42, 0) 70%);
+  filter: blur(8px);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.reveal-stage.is-playing .reveal-ground {
+  animation: rvGroundIn 1800ms ease-out 1800ms forwards;
+}
+@keyframes rvGroundIn { to { opacity: 1; } }
+
+/* Wordmark + tagline */
+.reveal-wordmark-block {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  transform: translateX(-50%);
+  text-align: center;
+  opacity: 0;
+  z-index: 6;
+  width: max-content;
+  max-width: 92vw;
+}
+.reveal-stage.is-playing .reveal-wordmark-block {
+  animation: rvWordIn 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) 3200ms forwards;
+}
+@keyframes rvWordIn {
+  0%   { opacity: 0; transform: translate(-50%, 16px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.reveal-mini-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.reveal-mini-divider::before,
+.reveal-mini-divider::after {
+  content: "";
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9932a 50%, transparent);
+}
+.reveal-mini-divider .dot {
+  width: 6px;
+  height: 6px;
+  background: #c9932a;
+  transform: rotate(45deg);
+}
+
+.reveal-wordmark {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.2vw, 60px);
+  font-weight: 500;
+  letter-spacing: 0.012em;
+  line-height: 1;
+  margin: 0;
+  background: linear-gradient(180deg, #f4efe6 0%, #c9a874 60%, #8c6b33 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(201, 147, 42, 0.28));
+}
+.reveal-tagline {
+  margin-top: 18px;
+  font-family: var(--sans);
+  font-size: clamp(10.5px, 0.85vw, 12.5px);
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.7);
+  font-weight: 500;
+}
+
+/* Drifting brass motes */
+.reveal-motes {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.reveal-mote {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #e8c060;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(232, 192, 96, 0.7);
+  animation: rvFloat 12s linear infinite;
+}
+.reveal-mote.big {
+  width: 3px;
+  height: 3px;
+}
+@keyframes rvFloat {
+  0%   { opacity: 0; transform: translateY(40px); }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-100vh); }
+}
+
+/* Film grain overlay */
+.reveal-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
 .hero-meta-top {
   position: absolute;
   top: 96px;
@@ -913,6 +1225,12 @@ body {
   .nav-brand-sub { display: none; }
 
   .hero { min-height: 560px; }
+  .reveal-corner.tl { top: 78px; left: 22px; }
+  .reveal-corner.tr { top: 78px; right: 22px; }
+  .reveal-corner.bl { bottom: 84px; left: 22px; }
+  .reveal-corner.br { bottom: 84px; right: 22px; }
+  .reveal-logo-deck { width: min(72vw, 360px); }
+  .reveal-wordmark-block { bottom: 12%; }
   .hero-meta-top { padding: 0 22px; top: 80px; }
   .hero-overlay { bottom: 44px; }
 
