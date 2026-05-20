@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>HM Geomatics · Commercial Introduction</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  /* Deck variables */
+  deck-stage {
+    --slide-bg: var(--ivory);
+    --serif: "Playfair Display", serif;
+    --sans: "Inter", sans-serif;
+  }
+  body { margin: 0; background: #d6cebf; }
+  section { background: var(--ivory); color: var(--graphite); position: relative; overflow: hidden; }
+
+  /* Common slide chrome */
+  .gutter { padding: 96px 128px; height: 100%; box-sizing: border-box; }
+  .brass-edge { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--brass); }
+
+  .eyebrow { font-family: var(--sans); font-size: 14px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--graphite-3); font-weight: 500; }
+  .eyebrow-light { color: var(--brass-soft); }
+
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Top bar pattern — small monogram + page meta */
+  .topbar { position: absolute; top: 56px; left: 128px; right: 128px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .mark { display: flex; align-items: center; gap: 12px; }
+  .topbar .mark-title { font-family: var(--serif); font-size: 22px; }
+  .footbar { position: absolute; bottom: 48px; left: 128px; right: 128px; display: flex; justify-content: space-between; font-family: var(--sans); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--graphite-3); }
+  .on-dark .footbar { color: rgba(244,239,230,0.5); }
+  .on-dark .topbar .mark-title { color: var(--ivory); }
+  .on-dark .eyebrow { color: var(--brass-soft); }
+
+  /* Dark / hero slides */
+  section.dark { background: var(--graphite); color: var(--ivory); }
+  section.deep { background: #0A2418; color: var(--ivory); }
+  section.emerald { background: var(--emerald); color: var(--ivory); }
+  section.image { background: #0A1814; color: var(--ivory); }
+
+  h1.headline { font-family: var(--serif); font-weight: 400; font-size: 130px; line-height: 0.98; letter-spacing: -0.025em; margin: 0; text-wrap: balance; }
+  h2.headline { font-family: var(--serif); font-weight: 400; font-size: 84px; line-height: 1.04; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+  h3.headline { font-family: var(--serif); font-weight: 400; font-size: 56px; line-height: 1.08; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .italic { font-style: italic; }
+  .emerald-text { color: var(--emerald); }
+  .brass-text { color: var(--brass-soft); }
+  .ivory-text { color: var(--ivory); }
+  p.lead { font-family: var(--sans); font-size: 26px; line-height: 1.5; color: var(--graphite-2); max-width: 60ch; }
+  .on-dark p.lead { color: rgba(244,239,230,0.82); }
+  .body { font-size: 18px; line-height: 1.65; color: var(--graphite-2); }
+  .on-dark .body { color: rgba(244,239,230,0.78); }
+
+  /* Reusable layout helpers */
+  .stack { display: flex; flex-direction: column; gap: 32px; }
+  .stack-tight { display: flex; flex-direction: column; gap: 16px; }
+  .row { display: flex; gap: 48px; align-items: center; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 64px; }
+
+  /* Stat cell */
+  .stat { border-top: 1px solid var(--brass); padding-top: 18px; }
+  .stat .v { font-family: var(--serif); font-size: 64px; line-height: 1; }
+  .stat .l { font-family: var(--sans); font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--graphite-3); margin-top: 12px; }
+  .on-dark .stat { border-top-color: rgba(176,138,74,0.5); }
+  .on-dark .stat .l { color: rgba(244,239,230,0.6); }
+
+  /* Service tile */
+  .tile { padding: 36px 32px; border-top: 1px solid var(--brass); border-right: 1px solid rgba(176,138,74,0.3); display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; }
+  .tile:last-child { border-right: none; }
+  .tile .n { font-family: var(--sans); font-size: 14px; letter-spacing: 0.24em; color: var(--graphite-3); }
+  .tile .t { font-family: var(--serif); font-size: 32px; margin-top: 14px; line-height: 1.1; }
+  .tile .d { font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--graphite-2); }
+  .on-dark .tile { border-right-color: rgba(176,138,74,0.3); }
+  .on-dark .tile .n { color: rgba(244,239,230,0.5); }
+  .on-dark .tile .d { color: rgba(244,239,230,0.7); }
+
+  .icon-mask { display: inline-block; background: var(--emerald); }
+  .on-dark .icon-mask { background: var(--brass-soft); }
+</style>
+<script type="application/json" id="speaker-notes">[
+"Welcome. This is HM Geomatics — a Malaysian licensed land surveying practice. The deck takes about ten minutes; I'll cover who we are, the eight disciplines we work in, a representative project, our standards, and the next step if we're a fit. Coordinates on the right are our office in Petaling Jaya — a small inside joke for surveyors.",
+"Three sentences about us. We were founded in 1987. Forty surveyors, all licensed under LJUBM. Cadastral, topographic, engineering, hydrographic, aerial — every parcel sealed and signed.",
+"The eight disciplines. Cadastral and title work makes up about forty percent of the practice; engineering for construction is another thirty; the rest is split between topographic, hydrographic, UAV, GIS, and pure GNSS control work. We won't take on a brief outside these eight.",
+"This is a featured project from 2024. Cameron Highlands, 1,847 hectares of tea estate, 124 parcels, ground-truthed by a 19-station GNSS network and drone photogrammetry. Five months on site. Title ambiguity that had stood since the colonial cadaster, resolved.",
+"This is the standard. GDM2000 reference frame. Plus-or-minus five millimetres horizontal accuracy. Class A licensure. Quarterly instrument calibration by SIRIM. Five million Ringgit professional indemnity. The same standard whether the brief is a residential boundary or a thirty-four kilometre rail alignment.",
+"The four phases — reconnaissance, control, boundary, deliverable. Reconnaissance is always on foot. Control is GNSS, minimum four hours per station, observed in three sessions, adjusted as a network. Boundary is RTK plus total-station traverse where canopy obstructs. Deliverable is the sealed plan, the signed report, and a re-checkable archive — lodged with JUPEM if cadastral.",
+"A handful of selected projects from the last three years. Across cadastral, engineering, hydrographic. Across Peninsular and East Malaysia. Tell us about your parcel and we'll show you the one most like it.",
+"The next step. Send us the brief — a sentence is enough, plus the lot reference if you have one. We acknowledge within twenty-four hours and respond with a proposal within two working days. Thank you for your time."
+]</script>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- ============================================================ -->
+  <!-- 01 — TITLE                                                      -->
+  <!-- ============================================================ -->
+  <section class="image">
+    <div class="brass-edge"></div>
+    <!-- Background -->
+    <div style="position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2400&q=80') center/cover;"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%);"></div>
+
+    <div class="topbar on-dark">
+      <div class="mark">
+        <svg width="42" height="42" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="56" fill="none" stroke="#F4EFE6" stroke-width="0.75"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#B08A4A" stroke-width="0.75"/>
+          <line x1="60" y1="3.5" x2="60" y2="9.5" stroke="#B08A4A" stroke-width="0.75"/>
+          <text x="60" y="71" text-anchor="middle" font-family="Playfair Display, serif" font-size="36" font-weight="500" fill="#F4EFE6">HM</text>
+        </svg>
+        <div class="mark-title">HM Geomatics</div>
+      </div>
+      <div class="eyebrow eyebrow-light num" style="text-align: right; line-height: 1.6;">3.1390° N<br/>101.6869° E</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: flex-end; position: relative;">
+      <div class="eyebrow eyebrow-light">Commercial introduction · 2026</div>
+      <h1 class="headline ivory-text" style="margin-top: 32px;">
+        Boundary, <span class="italic brass-text">set down.</span><br/>
+        Since 1987.
+      </h1>
+      <p class="lead" style="color: rgba(244,239,230,0.85); margin-top: 36px;">
+        A Malaysian licensed land surveying practice. Cadastral, topographic, engineering, hydrographic and aerial work — every parcel sealed and signed.
+      </p>
+    </div>
+
+    <div class="footbar" style="color: rgba(244,239,230,0.55);">
+      <span>HM Geomatics Sdn Bhd · PLS 2104</span>
+      <span>Petaling Jaya · Selangor</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 02 — THE PRACTICE                                              -->
+  <!-- ============================================================ -->
+  <section>
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark">
+        <svg width="36" height="36" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="56" fill="#0E5A3A"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#B08A4A" stroke-width="0.75"/>
+          <text x="60" y="71" text-anchor="middle" font-family="Playfair Display, serif" font-size="36" font-weight="500" fill="#F4EFE6">HM</text>
+        </svg>
+        <div class="mark-title" style="color: var(--graphite);">HM Geomatics</div>
+      </div>
+      <div class="eyebrow num">02 — The practice</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="eyebrow">The practice · 01 of 08</div>
+      <h2 class="headline" style="margin-top: 32px; max-width: 22ch;">
+        A practice built on <span class="italic emerald-text">patience</span>, precision, and the long view.
+      </h2>
+      <p class="lead" style="margin-top: 40px;">
+        Forty surveyors. One standard. Every parcel surveyed by HM Geomatics is delivered with a sealed plan, a signed report, and the same protocol we used the year we opened — refined, not replaced.
+      </p>
+
+      <div class="grid-4" style="margin-top: 64px;">
+        <div class="stat"><div class="v">38</div><div class="l">Years</div></div>
+        <div class="stat"><div class="v">40</div><div class="l">Surveyors</div></div>
+        <div class="stat"><div class="v">12,480</div><div class="l">Parcels surveyed</div></div>
+        <div class="stat"><div class="v">±5<span style="font-size: 32px;"> mm</span></div><div class="l">Horizontal accuracy</div></div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>02 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 03 — SERVICES (DARK)                                          -->
+  <!-- ============================================================ -->
+  <section class="dark on-dark">
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark">
+        <div class="mark-title ivory-text">HM Geomatics</div>
+      </div>
+      <div class="eyebrow num">03 — Services</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div class="eyebrow">Services · 01 — 08</div>
+          <h2 class="headline ivory-text" style="margin-top: 28px;">
+            The full discipline of <span class="italic brass-text">land surveying</span>.
+          </h2>
+        </div>
+        <p class="body" style="max-width: 36ch; color: rgba(244,239,230,0.7);">
+          Eight disciplines, one licensed practice. We will not take on a brief outside this list — and we will not subcontract it.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 64px; border-top: 1px solid rgba(176,138,74,0.5);">
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/cadastral.svg) center/40px no-repeat; mask: url(../assets/icons/cadastral.svg) center/40px no-repeat;"></span>
+            <div class="n">01</div>
+            <div class="t">Cadastral</div>
+          </div>
+          <div class="d">Boundary determination, sub-division, plans lodged with JUPEM.</div>
+        </div>
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/topographic.svg) center/40px no-repeat; mask: url(../assets/icons/topographic.svg) center/40px no-repeat;"></span>
+            <div class="n">02</div>
+            <div class="t">Topographic</div>
+          </div>
+          <div class="d">Contour, terrain and feature surveys, 1:200 to 1:5,000.</div>
+        </div>
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/engineering.svg) center/40px no-repeat; mask: url(../assets/icons/engineering.svg) center/40px no-repeat;"></span>
+            <div class="n">03</div>
+            <div class="t">Engineering</div>
+          </div>
+          <div class="d">Setting-out and as-built for construction and infrastructure.</div>
+        </div>
+        <div class="tile" style="border-right: none;">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/hydrographic.svg) center/40px no-repeat; mask: url(../assets/icons/hydrographic.svg) center/40px no-repeat;"></span>
+            <div class="n">04</div>
+            <div class="t">Hydrographic</div>
+          </div>
+          <div class="d">Bathymetric mapping for harbours, channels, reservoirs.</div>
+        </div>
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/uav.svg) center/40px no-repeat; mask: url(../assets/icons/uav.svg) center/40px no-repeat;"></span>
+            <div class="n">05</div>
+            <div class="t">UAV / LiDAR</div>
+          </div>
+          <div class="d">Drone photogrammetry and aerial laser scanning.</div>
+        </div>
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/gis.svg) center/40px no-repeat; mask: url(../assets/icons/gis.svg) center/40px no-repeat;"></span>
+            <div class="n">06</div>
+            <div class="t">GIS</div>
+          </div>
+          <div class="d">Spatial-data capture, geodatabase design and analysis.</div>
+        </div>
+        <div class="tile">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/construction-staking.svg) center/40px no-repeat; mask: url(../assets/icons/construction-staking.svg) center/40px no-repeat;"></span>
+            <div class="n">07</div>
+            <div class="t">Construction</div>
+          </div>
+          <div class="d">Site staking, dimensional control, deformation monitoring.</div>
+        </div>
+        <div class="tile" style="border-right: none;">
+          <div>
+            <span class="icon-mask" style="width: 40px; height: 40px; -webkit-mask: url(../assets/icons/gnss.svg) center/40px no-repeat; mask: url(../assets/icons/gnss.svg) center/40px no-repeat;"></span>
+            <div class="n">08</div>
+            <div class="t">GNSS Control</div>
+          </div>
+          <div class="d">High-accuracy networks tied to GDM2000 / RSO.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>03 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 04 — FEATURED PROJECT                                          -->
+  <!-- ============================================================ -->
+  <section>
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark"><div class="mark-title">HM Geomatics</div></div>
+      <div class="eyebrow num">04 — Selected work</div>
+    </div>
+
+    <div class="gutter" style="display: flex; align-items: center;">
+      <div class="grid-2" style="width: 100%; align-items: stretch;">
+        <div style="background: #1a2a22 url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=2000&q=80') center/cover; min-height: 700px; position: relative;">
+          <div style="position: absolute; left: 24px; bottom: 24px; color: var(--ivory); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase;">
+            Cameron Highlands · 1,847 ha
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <div class="eyebrow">Selected work · 2024</div>
+          <h2 class="headline" style="margin-top: 28px; font-size: 64px;">
+            Sungai Palas Tea Estate <span class="italic emerald-text">cadastral re-survey</span>.
+          </h2>
+          <p class="body" style="margin-top: 28px; max-width: 44ch;">
+            Five months. 1,847 hectares. 124 historical parcels, ground-truthed by GNSS control and drone photogrammetry — concluding seventy years of title ambiguity in the Cameron Highlands.
+          </p>
+          <div class="grid-2" style="margin-top: 48px; gap: 32px;">
+            <div class="stat"><div class="v" style="font-size: 48px;">1,847 ha</div><div class="l">Area surveyed</div></div>
+            <div class="stat"><div class="v" style="font-size: 48px;">124</div><div class="l">Parcels</div></div>
+            <div class="stat"><div class="v" style="font-size: 48px;">5 mo.</div><div class="l">Duration</div></div>
+            <div class="stat"><div class="v" style="font-size: 48px;">±5 mm</div><div class="l">Accuracy</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>04 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 05 — STANDARDS (DEEP)                                          -->
+  <!-- ============================================================ -->
+  <section class="deep on-dark">
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark"><div class="mark-title ivory-text">HM Geomatics</div></div>
+      <div class="eyebrow num">05 — Standards</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="grid-2" style="align-items: flex-start;">
+        <div>
+          <div class="eyebrow">Standards</div>
+          <h2 class="headline ivory-text" style="margin-top: 28px;">
+            The same standard,<br/>
+            for <span class="italic brass-text">every brief</span>.
+          </h2>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px;">
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Datum</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">GDM2000 · RSO Malayan / Borneo</div>
+          </div>
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Accuracy</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">±5 mm horizontal · ±10 mm vertical</div>
+          </div>
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Instruments</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">Leica TS60 · Trimble R12i · DJI M350 RTK</div>
+          </div>
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Licensure</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">LJUBM · PLS 2104 · Class A</div>
+          </div>
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Calibration</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">Quarterly · external laboratory (SIRIM)</div>
+          </div>
+          <div class="stat">
+            <div class="l" style="margin: 0 0 14px 0;">Insurance</div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.3;">Professional indemnity · RM 5,000,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>05 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 06 — PROCESS                                                    -->
+  <!-- ============================================================ -->
+  <section>
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark"><div class="mark-title">HM Geomatics</div></div>
+      <div class="eyebrow num">06 — Process</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="eyebrow">Process · 01 — 04</div>
+      <h2 class="headline" style="margin-top: 28px;">
+        Four phases.<br/>
+        <span class="italic emerald-text">One protocol.</span>
+      </h2>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 80px; border-top: 1px solid var(--brass);">
+        <div style="padding: 32px 28px 0 0; border-right: 1px solid var(--hairline);">
+          <div class="eyebrow num">Phase 01</div>
+          <div style="font-family: var(--serif); font-size: 32px; margin-top: 18px;">Reconnaissance</div>
+          <p class="body" style="font-size: 16px; margin-top: 16px;">Every boundary mark inspected on foot. Conditions noted, photographs filed, preliminary coordinates recorded.</p>
+        </div>
+        <div style="padding: 32px 28px 0 28px; border-right: 1px solid var(--hairline);">
+          <div class="eyebrow num">Phase 02</div>
+          <div style="font-family: var(--serif); font-size: 32px; margin-top: 18px;">Control</div>
+          <p class="body" style="font-size: 16px; margin-top: 16px;">GNSS network observed in three four-hour sessions, adjusted to GDM2000. Standard deviations published.</p>
+        </div>
+        <div style="padding: 32px 28px 0 28px; border-right: 1px solid var(--hairline);">
+          <div class="eyebrow num">Phase 03</div>
+          <div style="font-family: var(--serif); font-size: 32px; margin-top: 18px;">Boundary</div>
+          <p class="body" style="font-size: 16px; margin-top: 16px;">RTK GNSS at each mark, total-station traverse where canopy obstructs. Held to ±5 mm horizontal.</p>
+        </div>
+        <div style="padding: 32px 0 0 28px;">
+          <div class="eyebrow num">Phase 04</div>
+          <div style="font-family: var(--serif); font-size: 32px; margin-top: 18px;">Deliverable</div>
+          <p class="body" style="font-size: 16px; margin-top: 16px;">Sealed plan, signed report, lodgement with JUPEM. Filed against a 38-year, re-checkable archive.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>06 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 07 — SELECTED PROJECTS                                          -->
+  <!-- ============================================================ -->
+  <section>
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark"><div class="mark-title">HM Geomatics</div></div>
+      <div class="eyebrow num">07 — Selected projects</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div class="eyebrow">Selected projects · 2022 — 2024</div>
+          <h2 class="headline" style="margin-top: 24px;">A representative sample.</h2>
+        </div>
+        <div class="body" style="max-width: 32ch;">Across Peninsular and East Malaysia. Across the eight disciplines.</div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 64px;">
+        <article>
+          <div style="aspect-ratio: 4/3; background: #2d3530 url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1400&q=80') center/cover;"></div>
+          <div style="display: flex; justify-content: space-between; margin-top: 18px; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass-deep);">
+            <span>Cadastral · UAV</span><span style="color: var(--graphite-4);">2024</span>
+          </div>
+          <h4 style="font-family: var(--serif); font-weight: 500; font-size: 24px; line-height: 1.25; margin: 14px 0 0 0;">Sungai Palas Tea Estate</h4>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; color: var(--graphite-3);">
+            <span>Cameron Highlands</span><span class="num">1,847 ha</span>
+          </div>
+        </article>
+        <article>
+          <div style="aspect-ratio: 4/3; background: #2d3530 url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400&q=80') center/cover;"></div>
+          <div style="display: flex; justify-content: space-between; margin-top: 18px; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass-deep);">
+            <span>Engineering</span><span style="color: var(--graphite-4);">2024</span>
+          </div>
+          <h4 style="font-family: var(--serif); font-weight: 500; font-size: 24px; line-height: 1.25; margin: 14px 0 0 0;">KL East Logistics Hub</h4>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; color: var(--graphite-3);">
+            <span>Ampang, Kuala Lumpur</span><span class="num">46 ha</span>
+          </div>
+        </article>
+        <article>
+          <div style="aspect-ratio: 4/3; background: #2d3530 url('https://images.unsplash.com/photo-1473649085228-583485e6e4d7?w=1400&q=80') center/cover;"></div>
+          <div style="display: flex; justify-content: space-between; margin-top: 18px; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass-deep);">
+            <span>Hydrographic</span><span style="color: var(--graphite-4);">2023</span>
+          </div>
+          <h4 style="font-family: var(--serif); font-weight: 500; font-size: 24px; line-height: 1.25; margin: 14px 0 0 0;">Pulau Tioman Marine Park</h4>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; color: var(--graphite-3);">
+            <span>Pahang</span><span class="num">88 km²</span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span>HM Geomatics · 2026</span>
+      <span>07 / 08</span>
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 08 — CLOSING                                                    -->
+  <!-- ============================================================ -->
+  <section class="emerald on-dark">
+    <div class="brass-edge"></div>
+    <div class="topbar">
+      <div class="mark">
+        <svg width="42" height="42" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="56" fill="none" stroke="#F4EFE6" stroke-width="0.75"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#B08A4A" stroke-width="0.75"/>
+          <text x="60" y="71" text-anchor="middle" font-family="Playfair Display, serif" font-size="36" font-weight="500" fill="#F4EFE6">HM</text>
+        </svg>
+        <div class="mark-title ivory-text">HM Geomatics</div>
+      </div>
+      <div class="eyebrow num" style="color: rgba(244,239,230,0.6);">08 — Next step</div>
+    </div>
+
+    <div class="gutter" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="eyebrow" style="color: var(--brass-soft);">The next step</div>
+      <h1 class="headline ivory-text" style="margin-top: 32px; font-size: 110px;">
+        Tell us about<br/>
+        the <span class="italic brass-text">parcel</span>.<br/>
+        We’ll take it from there.
+      </h1>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; margin-top: 96px; padding-top: 32px; border-top: 1px solid rgba(244,239,230,0.4);">
+        <div>
+          <div class="eyebrow" style="color: rgba(244,239,230,0.7);">Office</div>
+          <div style="font-family: var(--serif); font-size: 22px; line-height: 1.5; margin-top: 14px;">
+            14 Jalan Bukit Bintang<br/>
+            46050 Petaling Jaya, Selangor
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow" style="color: rgba(244,239,230,0.7);">Speak</div>
+          <div style="font-family: var(--serif); font-size: 22px; line-height: 1.5; margin-top: 14px;">
+            +60 3 7726 1987<br/>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5221272024372b123a3f35373d3f33263b31217c3f2b">[email&#160;protected]</a>
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow" style="color: rgba(244,239,230,0.7);">Lead</div>
+          <div style="font-family: var(--serif); font-size: 22px; line-height: 1.5; margin-top: 14px;">
+            Sr Mohamad Hafiz Ismail<br/>
+            PLS 2104 · Class A
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar" style="color: rgba(244,239,230,0.55);">
+      <span>HM Geomatics Sdn Bhd · 199801007234 (P)</span>
+      <span>End · 08 / 08</span>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="deck-stage.js"></script>
+</body>
+</html>
