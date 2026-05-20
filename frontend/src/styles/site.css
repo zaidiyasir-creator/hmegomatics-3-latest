@@ -1024,7 +1024,7 @@ body {
 .chat-fab {
   position: fixed;
   right: 26px;
-  bottom: 26px;
+  bottom: 86px;
   z-index: 80;
   display: inline-flex;
   align-items: center;
@@ -1092,7 +1092,7 @@ iframe[src*="emergent-badge"] {
 @media (max-width: 700px) {
   .chat-fab {
     right: 16px;
-    bottom: 16px;
+    bottom: 78px;
     padding: 12px 18px 12px 14px;
     gap: 10px;
   }
