@@ -3,6 +3,7 @@ import "@/styles/site.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
+import Sitemap from "@/pages/Sitemap";
 import { Toaster } from "sonner";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/sitemap" element={<Sitemap />} />
         </Routes>
       </BrowserRouter>
       <Toaster

@@ -50,6 +50,27 @@ through the SEND ENQUIRY form.
 - Test credentials stored in `/app/memory/test_credentials.md`.
 - Full test pass (100% backend, 100% frontend) — `iteration_1.json`.
 
+## What's Been Implemented (2026-05-20 — session 2)
+- Replaced Three.js medallion with looping hero video
+  (`hmgeo-emergence.webm` + `.mp4`) handled by `HeroVideo.jsx`
+  (renamed from legacy `Hero3D.jsx`).
+- Responsive fluid typography via `clamp()` across all breakpoints.
+- Manifesto section with scroll-in reveal animation.
+- Custom CSS `mask-image` line-art icons in services grid.
+- Director portrait (`director-hazwan.jpg`) embedded in Leadership.
+- Floating "Chat to the Team" WhatsApp FAB (bottom-right, lifted to
+  `86px` to clear platform badges).
+- Company profile PDF download in nav.
+- **SEO**: meta tags, Open Graph, Twitter card, JSON-LD
+  `ProfessionalService` schema in `index.html`; `sitemap.xml` and
+  `robots.txt` served (verified HTTP 200). Cloudflare layer prepends
+  managed AI-bot policy automatically.
+- **PDF compression**: `hm-geomatics-2026-profile.pdf` reduced from
+  **43.2 MB → 4.3 MB** (90% smaller, 29 pages preserved) via Ghostscript
+  `/ebook` preset. Original kept as `.original.pdf` backup.
+- Removed legacy `Hero3D.jsx`; cleaned stray `}` parse error in
+  `Home.jsx`.
+
 ## Prioritised Backlog
 ### P1
 - Mobile QA pass on iOS Safari (Three.js memory footprint).

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import Nav from "@/components/Nav";
-import Hero3D from "@/components/Hero3D";
+import HeroVideo from "@/components/HeroVideo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -199,7 +199,7 @@ export default function Home() {
 
       {/* ============ HERO ============ */}
       <header className="hero" data-testid="hero">
-        <Hero3D />
+        <HeroVideo />
 
         <div className="hero-meta-top">
           <div className="item">
@@ -481,7 +481,7 @@ export default function Home() {
         <span>© 2026 HM Geomatics Sdn. Bhd. · All rights reserved</span>
         <span style={{ display: "inline-flex", gap: 18, alignItems: "center" }}>
           <a
-            href="/sitemap.xml"
+            href="/sitemap"
             style={{ color: "inherit", textDecoration: "none" }}
             data-testid="footer-sitemap"
           >
