@@ -3,7 +3,7 @@
    Prestige · Dark hero + alternating cream/white sections
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap");
 
 :root {
   --gold: #c9932a;
@@ -54,8 +54,8 @@ body {
 /* ---------- Common atoms ---------- */
 .eyebrow {
   font-family: var(--sans);
-  font-weight: 200;
-  font-size: 8px;
+  font-weight: 300;
+  font-size: 10px;
   letter-spacing: 0.38em;
   text-transform: uppercase;
   color: var(--gold);
@@ -63,11 +63,11 @@ body {
 
 .eyebrow-muted {
   font-family: var(--sans);
-  font-weight: 200;
-  font-size: 8px;
+  font-weight: 300;
+  font-size: 10px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .gold-bar {
@@ -80,19 +80,20 @@ body {
 
 .section-heading {
   font-family: var(--serif);
-  font-weight: 300;
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   margin: 0;
   color: var(--text-dark);
 }
 
 .section-heading.large {
-  font-size: 44px;
-  line-height: 1.08;
+  font-size: 36px;
+  line-height: 1.1;
 }
 
 .section-heading .italic {
   font-style: italic;
+  font-weight: 500;
   color: var(--gold);
 }
 
@@ -171,17 +172,17 @@ body {
 }
 .nav-brand-name {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8.5px;
+  font-weight: 400;
+  font-size: 10px;
   letter-spacing: 0.32em;
   color: #e8e0d0;
 }
 .nav-brand-sub {
   font-family: var(--sans);
-  font-weight: 200;
-  font-size: 7px;
+  font-weight: 300;
+  font-size: 8.5px;
   letter-spacing: 0.28em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.55);
   margin-top: 3px;
 }
 
@@ -192,11 +193,11 @@ body {
 }
 .nav-link {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8.5px;
+  font-weight: 400;
+  font-size: 10.5px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   transition: color 0.3s ease;
   background: none;
@@ -233,7 +234,9 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   z-index: 1;
+  background: #000;
 }
 
 .hero-meta-top {
@@ -269,17 +272,18 @@ body {
 
 .hero-title {
   font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(28px, 5vw, 44px);
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-size: clamp(24px, 3.6vw, 34px);
+  letter-spacing: 0.08em;
   color: var(--text-hero);
   margin: 14px 0;
   line-height: 1.05;
 }
 .hero-title .gold {
   color: var(--gold);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   margin-right: 4px;
+  font-weight: 700;
 }
 
 .hero-divider {
@@ -324,10 +328,10 @@ body {
 }
 .scroll-cue .label {
   font-family: var(--sans);
-  font-weight: 200;
-  font-size: 7px;
+  font-weight: 300;
+  font-size: 9px;
   letter-spacing: 0.42em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
 }
 
@@ -351,11 +355,11 @@ body {
 .quote-band blockquote {
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 400;
-  font-size: clamp(16px, 1.6vw, 20px);
-  line-height: 1.65;
+  font-weight: 500;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
   color: #3a3028;
-  max-width: 560px;
+  max-width: 580px;
   margin: 0;
   position: relative;
 }
@@ -373,18 +377,19 @@ body {
 .quote-attr {
   text-align: right;
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 11px;
+  font-weight: 400;
+  font-size: 12.5px;
   color: var(--text-muted);
   line-height: 1.7;
 }
 .quote-attr .label {
   display: block;
-  font-size: 8px;
-  letter-spacing: 0.32em;
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 10px;
+  font-weight: 500;
 }
 
 /* ============================================================
@@ -403,10 +408,10 @@ body {
   margin: 0 auto 56px;
 }
 .services-head p {
-  max-width: 360px;
-  font-size: 12px;
+  max-width: 380px;
+  font-size: 14px;
   color: var(--text-muted);
-  line-height: 1.85;
+  line-height: 1.8;
   margin: 0;
 }
 .services-grid {
@@ -433,26 +438,26 @@ body {
 }
 .service-cell .num {
   font-family: var(--sans);
-  font-weight: 200;
-  font-size: 10px;
+  font-weight: 400;
+  font-size: 11.5px;
   letter-spacing: 0.32em;
   color: var(--gold);
   margin-bottom: 22px;
 }
 .service-cell h3 {
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: 22px;
+  font-weight: 600;
+  font-size: 19px;
   color: var(--text-dark);
   margin: 0 0 14px;
   line-height: 1.2;
 }
 .service-cell p {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 11.5px;
+  font-weight: 400;
+  font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.95;
+  line-height: 1.85;
   margin: 0;
 }
 
@@ -479,8 +484,8 @@ body {
 .about-cream h2,
 .about-dark h2 {
   font-family: var(--serif);
-  font-weight: 300;
-  font-size: 30px;
+  font-weight: 600;
+  font-size: 26px;
   line-height: 1.15;
   margin: 14px 0 0;
 }
@@ -492,12 +497,12 @@ body {
 }
 .about-cream p {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 13.5px;
+  font-weight: 400;
+  font-size: 14.5px;
   color: var(--text-body);
-  line-height: 2;
+  line-height: 1.95;
   margin: 28px 0 36px;
-  max-width: 480px;
+  max-width: 500px;
 }
 
 .about-stats {
@@ -509,18 +514,18 @@ body {
 }
 .about-stats .num {
   font-family: var(--serif);
-  font-weight: 300;
-  font-size: 30px;
+  font-weight: 600;
+  font-size: 28px;
   color: var(--gold);
   line-height: 1;
 }
 .about-stats .label {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 400;
+  font-size: 9.5px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #aaa;
+  color: #999;
   margin-top: 10px;
 }
 
@@ -540,16 +545,17 @@ body {
 .values-letter {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 24px;
-  color: rgba(201, 147, 42, 0.36);
+  font-weight: 500;
+  font-size: 22px;
+  color: rgba(201, 147, 42, 0.4);
   min-width: 32px;
 }
 .values-name {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 9.5px;
+  font-weight: 400;
+  font-size: 11px;
   letter-spacing: 0.26em;
-  color: #b0a898;
+  color: #c0b8a8;
   text-transform: uppercase;
 }
 
@@ -577,34 +583,34 @@ body {
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: 32px;
+  font-weight: 600;
+  font-size: 30px;
   color: var(--gold);
   background: #fff;
 }
 .director h3 {
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: 22px;
+  font-weight: 600;
+  font-size: 20px;
   color: var(--text-dark);
   margin: 0 0 6px;
 }
 .director .role {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.32em;
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 22px;
 }
 .director p {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 12.5px;
+  font-weight: 400;
+  font-size: 13.5px;
   color: var(--text-muted);
-  line-height: 1.95;
-  max-width: 640px;
+  line-height: 1.9;
+  max-width: 680px;
   margin: 0 0 28px;
 }
 .qual-tags {
@@ -614,12 +620,12 @@ body {
 }
 .qual-tag {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 400;
+  font-size: 9.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-muted);
-  padding: 6px 14px;
+  padding: 7px 14px;
   border: 0.5px solid var(--border-cream);
   background: #fff;
 }
@@ -640,17 +646,17 @@ body {
 }
 .contact-block {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 14px;
   color: var(--text-body);
-  line-height: 1.9;
+  line-height: 1.85;
   margin-bottom: 36px;
 }
 .contact-label {
   display: block;
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 500;
+  font-size: 9.5px;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--gold);
@@ -659,8 +665,8 @@ body {
 .btn-gold {
   display: inline-block;
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 9px;
+  font-weight: 500;
+  font-size: 10.5px;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--gold);
@@ -698,8 +704,8 @@ body {
 }
 .field label {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 500;
+  font-size: 9.5px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
@@ -708,8 +714,8 @@ body {
 .field input,
 .field textarea {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 14px;
   color: var(--text-dark);
   border: none;
   border-bottom: 0.5px solid var(--border-cream);
@@ -738,11 +744,11 @@ body {
   justify-content: space-between;
   align-items: center;
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 400;
+  font-size: 9.5px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #3a3a3a;
+  color: #4a4a4a;
 }
 
 /* ============================================================
@@ -757,16 +763,16 @@ body {
 }
 .admin-shell h1 {
   font-family: var(--serif);
-  font-weight: 300;
-  font-size: 32px;
+  font-weight: 600;
+  font-size: 30px;
   color: var(--gold);
   margin: 0 0 8px;
 }
 .admin-shell .sub {
-  font-size: 9px;
+  font-size: 10.5px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
   margin-bottom: 40px;
 }
 .admin-login {
@@ -794,7 +800,7 @@ body {
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 11.5px;
+  font-size: 13px;
 }
 .admin-table th,
 .admin-table td {
@@ -804,8 +810,8 @@ body {
   vertical-align: top;
 }
 .admin-table th {
-  font-weight: 300;
-  font-size: 8px;
+  font-weight: 500;
+  font-size: 9.5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
