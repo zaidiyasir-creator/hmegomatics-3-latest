@@ -234,32 +234,100 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
-  transform: scale(0.78);
-  transform-origin: center center;
   z-index: 1;
   background: transparent;
 }
-/* Iframe (logo reveal) fills the hero exactly — no object-fit / scale */
-.hero-canvas.hero-reveal-iframe {
-  transform: none;
-  object-fit: unset;
-  border: 0;
-  display: block;
+
+.hero-meta-top {
+  position: absolute;
+  top: 96px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 60px;
+  z-index: 2;
+  pointer-events: none;
 }
-@media (max-width: 1100px) {
-  .hero-canvas { transform: scale(0.92); }
-  .hero-canvas.hero-reveal-iframe { transform: none; }
+.hero-meta-top .item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-@media (max-width: 700px) {
-  .hero-canvas { transform: scale(1.0); }
-  .hero-canvas.hero-reveal-iframe { transform: none; }
+.hero-meta-top .item.right {
+  text-align: right;
+  align-items: flex-end;
 }
 
-/* Hide the global scroll-cue when the reveal iframe is the hero (the reveal has its own replay button) */
-.hero:has(.hero-reveal-iframe) .scroll-cue {
-  display: none;
+.hero-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  text-align: center;
+  z-index: 2;
+  padding: 0 24px;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(30px, 4.2vw, 52px);
+  letter-spacing: 0.07em;
+  color: var(--text-hero);
+  margin: 16px 0;
+  line-height: 1.05;
+}
+.hero-title .gold {
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-right: 6px;
+  font-weight: 700;
+}
+
+.hero-divider {
+  width: 48px;
+  height: 0.5px;
+  background: var(--gold);
+  margin: 14px auto;
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+.scroll-cue .line {
+  width: 0.5px;
+  height: 36px;
+  background: var(--gold);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-cue .line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent);
+  animation: scroll-drip 2.4s ease-in-out infinite;
+}
+@keyframes scroll-drip {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.scroll-cue .label {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(10px, 0.8vw, 12px);
+  letter-spacing: 0.42em;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
 }
 
 /* ============================================================

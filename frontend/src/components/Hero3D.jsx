@@ -1,17 +1,7 @@
 /**
- * HM Geomatics — Logo Reveal hero.
- * Embeds /logo-reveal.html (the verbatim reveal artifact) as an iframe.
+ * HM Geomatics — hero placeholder.
+ * No animation currently — clean dark hero with overlay text only.
  */
 export default function Hero3D() {
-  return (
-    <iframe
-      src="/logo-reveal.html"
-      title="HM Geomatics Logo Reveal"
-      data-testid="hero-3d-canvas"
-      className="hero-canvas hero-reveal-iframe"
-      loading="eager"
-      aria-hidden="true"
-      tabIndex={-1}
-    />
-  );
+  return <div className="hero-canvas" data-testid="hero-3d-canvas" aria-hidden="true" />;
 }
