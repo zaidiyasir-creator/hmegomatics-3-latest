@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter">
+
+    <!-- Surface waves (three horizontal water lines) -->
+    <path d="M2 8 Q 6 6 10 8 T 18 8 T 22 8"></path>
+    <path d="M2 12 Q 6 10 10 12 T 18 12 T 22 12" opacity="0.7"></path>
+    <path d="M2 16 Q 6 14 10 16 T 18 16 T 22 16" opacity="0.45"></path>
+
+    <!-- Sounding plumb line + lead weight (depth measurement motif) -->
+    <line x1="12" y1="3" x2="12" y2="19"></line>
+    <path d="M10.5 19 L12 21.4 L13.5 19 Z" fill="currentColor" stroke="none"></path>
+
+    <!-- Tick marks on the line (depth gradations) -->
+    <line x1="11.2" y1="5"  x2="12.8" y2="5"  opacity="0.55"></line>
+    <line x1="11.2" y1="9"  x2="12.8" y2="9"  opacity="0.55"></line>
+    <line x1="11.2" y1="13" x2="12.8" y2="13" opacity="0.55"></line>
+    <line x1="11.2" y1="17" x2="12.8" y2="17" opacity="0.55"></line>
+
+    <!-- Buoy / vessel anchor point at top -->
+    <circle cx="12" cy="3" r="1.4" fill="currentColor" stroke="none"></circle>
+
+</svg>

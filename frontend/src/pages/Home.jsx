@@ -9,31 +9,37 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const SERVICES = [
   {
     n: "01",
+    icon: "/icons/land-boundary-survey.svg",
     t: "Land Boundary Survey",
     d: "Accurate demarcation and legal documentation for residential, commercial, and industrial properties.",
   },
   {
     n: "02",
+    icon: "/icons/topographic-mapping.svg",
     t: "Topographic Mapping",
     d: "High-precision terrain mapping and contour generation for development planning and engineering design.",
   },
   {
     n: "03",
+    icon: "/icons/geomatic-survey-works.svg",
     t: "Geomatic Survey Works",
     d: "Advanced geospatial data integrating GIS, CAD, and cutting-edge measurement technologies.",
   },
   {
     n: "04",
+    icon: "/icons/engineering-drawing.svg",
     t: "Engineering Drawing",
     d: "Detailed technical drawings for private developments and public infrastructure projects.",
   },
   {
     n: "05",
+    icon: "/icons/construction-monitoring.svg",
     t: "Construction Monitoring",
     d: "Ongoing site supervision and progress monitoring for large-scale subdivision developments.",
   },
   {
     n: "06",
+    icon: "/icons/hydrographic-survey.svg",
     t: "Hydrographic Survey",
     d: "FIG/IHO/ICA Category A certified hydrographic surveys for maritime and coastal applications.",
   },
@@ -238,7 +244,17 @@ export default function Home() {
               className="service-cell reveal"
               data-testid={`service-${s.n}`}
             >
-              <div className="num">{s.n}</div>
+              <div className="service-head">
+                <span className="num">{s.n}</span>
+                <span
+                  className="service-icon"
+                  style={{
+                    WebkitMaskImage: `url(${s.icon})`,
+                    maskImage: `url(${s.icon})`,
+                  }}
+                  aria-hidden="true"
+                />
+              </div>
               <h3>{s.t}</h3>
               <p>{s.d}</p>
             </article>
