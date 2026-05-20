@@ -200,6 +200,35 @@ export default function Home() {
       {/* ============ HERO ============ */}
       <header className="hero" data-testid="hero">
         <Hero3D />
+
+        <div className="hero-meta-top">
+          <div className="item">
+            <span className="eyebrow">EST · 2024</span>
+            <span className="eyebrow-muted">SEREMBAN · 2.7297° N</span>
+          </div>
+          <div className="item right">
+            <span className="eyebrow">LJT 617</span>
+            <span className="eyebrow-muted">101.9381° E</span>
+          </div>
+        </div>
+
+        <div className="hero-overlay">
+          <div className="eyebrow" data-testid="hero-eyebrow">
+            LAND SURVEYOR · LICENSED UNDER ACT 458 (REVISED 2024)
+          </div>
+          <h1 className="hero-title" data-testid="hero-title">
+            <span className="gold">HM</span>GEOMATICS
+          </h1>
+          <div className="hero-divider" />
+          <div className="eyebrow-muted">
+            WORLD DYNAMIC GEOMATIC LEADER · SEREMBAN, MALAYSIA
+          </div>
+        </div>
+
+        <div className="scroll-cue" aria-hidden>
+          <span className="line" />
+          <span className="label">Discover</span>
+        </div>
       </header>
 
       {/* ============ QUOTE BAND ============ */}
@@ -267,12 +296,14 @@ export default function Home() {
       <section className="manifesto" data-testid="manifesto-section">
         <div className="manifesto-inner">
           <div className="manifesto-eyebrow">Our Promise · MMXXVI</div>
-          <img
-            src="/manifesto.png"
-            alt="Precision. Innovation. Excellence."
-            className="manifesto-img reveal-up"
-            data-testid="manifesto-image"
-          />
+          <h2
+            className="manifesto-words reveal-up"
+            data-testid="manifesto-words"
+          >
+            <span className="word ivory">Precision.</span>
+            <span className="word ivory">Innovation.</span>
+            <span className="word excellence">Excellence.</span>
+          </h2>
           <div className="manifesto-rule" />
           <p className="manifesto-tagline">
             Three principles guiding every line, every level, every legal
@@ -371,31 +402,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ============ EMERGENCE VIDEO (dark interlude) ============ */}
-      <section className="emergence" data-testid="emergence-section">
-        <video
-          className="emergence-video"
-          data-testid="emergence-video"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-        >
-          <source src="/hmgeo-emergence.webm" type="video/webm" />
-          <source src="/hmgeo-emergence.mp4" type="video/mp4" />
-        </video>
-        <div className="emergence-vignette" aria-hidden />
-        <div className="emergence-caption">
-          <span className="manifesto-eyebrow">From the ground up</span>
-          <h2 className="emergence-h2">
-            Every project begins with a{" "}
-            <span className="gold-italic">first measurement</span>.
-          </h2>
         </div>
       </section>
 

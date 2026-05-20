@@ -1,17 +1,36 @@
+import { useEffect, useRef } from "react";
+
 /**
- * HM Geomatics — Logo Reveal hero.
- * Embeds /logo-reveal.html (the verbatim reveal artifact) as an iframe.
+ * HM Geomatics — hero emergence video.
+ * Looping muted autoplay of the 3D HM logo emerging from darkness.
  */
 export default function Hero3D() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    document.addEventListener("visibilitychange", tryPlay);
+    return () => document.removeEventListener("visibilitychange", tryPlay);
+  }, []);
+
   return (
-    <iframe
-      src="/logo-reveal.html"
-      title="HM Geomatics Logo Reveal"
+    <video
+      ref={videoRef}
+      className="hero-canvas hero-video"
       data-testid="hero-3d-canvas"
-      className="hero-canvas hero-reveal-iframe"
-      loading="eager"
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
       aria-hidden="true"
-      tabIndex={-1}
-    />
+    >
+      <source src="/hmgeo-emergence.webm" type="video/webm" />
+      <source src="/hmgeo-emergence.mp4" type="video/mp4" />
+    </video>
   );
 }

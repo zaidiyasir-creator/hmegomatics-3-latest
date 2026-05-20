@@ -261,6 +261,16 @@ body {
   background: var(--bg-dark);
   overflow: hidden;
 }
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 65% at 50% 45%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.45) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%, transparent 60%, rgba(0, 0, 0, 0.82) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
 
 .hero-canvas {
   position: absolute;
@@ -275,6 +285,11 @@ body {
   border: 0;
   display: block;
 }
+/* Video hero — cover the whole hero region, no letterboxing */
+.hero-canvas.hero-video {
+  object-fit: cover;
+  background: #000;
+}
 
 .hero-meta-top {
   position: absolute;
@@ -284,7 +299,7 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 60px;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 .hero-meta-top .item {
@@ -303,7 +318,7 @@ body {
   right: 0;
   bottom: 60px;
   text-align: center;
-  z-index: 2;
+  z-index: 3;
   padding: 0 24px;
 }
 
@@ -339,7 +354,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  z-index: 2;
+  z-index: 3;
 }
 .scroll-cue .line {
   width: 0.5px;
@@ -573,6 +588,37 @@ body {
   max-width: 920px;
   height: auto;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
+}
+
+/* Manifesto words (text replacement for the poster) */
+.manifesto-words {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(44px, 8vw, 120px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.manifesto-words .word {
+  display: block;
+}
+.manifesto-words .word.ivory {
+  color: #f4efe6;
+  text-shadow: 0 4px 30px rgba(244, 239, 230, 0.06);
+}
+.manifesto-words .word.excellence {
+  font-style: italic;
+  font-weight: 500;
+  background: linear-gradient(180deg, #f4efe6 0%, #c9a874 55%, #8c6b33 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: drop-shadow(0 4px 22px rgba(201, 147, 42, 0.28));
 }
 .manifesto-rule {
   width: 56px;
