@@ -241,11 +241,18 @@ body {
   z-index: 1;
   background: transparent;
 }
+/* Canvas (3D) doesn't need object-fit/scale shrinking; the camera handles fit */
+.hero-canvas.hero-3d {
+  transform: none;
+  object-fit: unset;
+}
 @media (max-width: 1100px) {
   .hero-canvas { transform: scale(0.92); }
+  .hero-canvas.hero-3d { transform: none; }
 }
 @media (max-width: 700px) {
   .hero-canvas { transform: scale(1.0); }
+  .hero-canvas.hero-3d { transform: none; }
 }
 
 .hero-meta-top {
