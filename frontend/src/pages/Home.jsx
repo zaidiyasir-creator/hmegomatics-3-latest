@@ -62,10 +62,10 @@ const QUALS = [
   "MAALS Member 2020",
 ];
 
-/* ---- IntersectionObserver hook for .reveal ---- */
+/* ---- IntersectionObserver hook for .reveal and .reveal-up ---- */
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll(".reveal");
+    const els = document.querySelectorAll(".reveal, .reveal-up");
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -263,6 +263,24 @@ export default function Home() {
         <div className="services-foot" />
       </section>
 
+      {/* ============ MANIFESTO (dark interlude) ============ */}
+      <section className="manifesto" data-testid="manifesto-section">
+        <div className="manifesto-inner">
+          <div className="manifesto-eyebrow">Our Promise · MMXXVI</div>
+          <img
+            src="/manifesto.png"
+            alt="Precision. Innovation. Excellence."
+            className="manifesto-img reveal-up"
+            data-testid="manifesto-image"
+          />
+          <div className="manifesto-rule" />
+          <p className="manifesto-tagline">
+            Three principles guiding every line, every level, every legal
+            boundary we deliver.
+          </p>
+        </div>
+      </section>
+
       {/* ============ ABOUT SPLIT ============ */}
       <section id="about" className="about-split" data-testid="about-section">
         <div className="about-cream reveal">
@@ -353,6 +371,31 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ============ EMERGENCE VIDEO (dark interlude) ============ */}
+      <section className="emergence" data-testid="emergence-section">
+        <video
+          className="emergence-video"
+          data-testid="emergence-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src="/hmgeo-emergence.webm" type="video/webm" />
+          <source src="/hmgeo-emergence.mp4" type="video/mp4" />
+        </video>
+        <div className="emergence-vignette" aria-hidden />
+        <div className="emergence-caption">
+          <span className="manifesto-eyebrow">From the ground up</span>
+          <h2 className="emergence-h2">
+            Every project begins with a{" "}
+            <span className="gold-italic">first measurement</span>.
+          </h2>
         </div>
       </section>
 

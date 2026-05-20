@@ -121,6 +121,19 @@ body {
   transform: translateY(0);
 }
 
+/* Larger "scroll in from bottom" reveal (for hero-class imagery) */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(80px) scale(0.96);
+  transition: opacity 1.1s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 1.1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform, opacity;
+}
+.reveal-up.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 /* ============================================================
    NAVIGATION
    ============================================================ */
@@ -516,6 +529,121 @@ body {
 /* Trailing white space below services to feel like rolex */
 .services-foot {
   height: 110px;
+}
+
+/* ============================================================
+   MANIFESTO — dark interlude with poster image
+   ============================================================ */
+.manifesto {
+  background: #050505;
+  position: relative;
+  padding: 140px 60px;
+  overflow: hidden;
+  text-align: center;
+}
+.manifesto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201, 147, 42, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 120% 50% at 50% 110%, rgba(201, 147, 42, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.manifesto-inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.manifesto-eyebrow {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(11px, 0.95vw, 13px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 56px;
+}
+.manifesto-img {
+  display: block;
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
+}
+.manifesto-rule {
+  width: 56px;
+  height: 0.5px;
+  background: var(--gold);
+  margin: 56px auto 28px;
+  opacity: 0.7;
+}
+.manifesto-tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(16px, 1.4vw, 20px);
+  color: rgba(244, 239, 230, 0.65);
+  max-width: 520px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================================
+   EMERGENCE — looping video interlude
+   ============================================================ */
+.emergence {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 56vw, 640px);
+  background: #000;
+  overflow: hidden;
+}
+.emergence-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.emergence-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.65) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 22%, transparent 55%, rgba(0, 0, 0, 0.88) 100%);
+  pointer-events: none;
+}
+.emergence-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(48px, 7vw, 88px);
+  text-align: center;
+  padding: 0 24px;
+  z-index: 2;
+}
+.emergence-caption .manifesto-eyebrow {
+  margin-bottom: 22px;
+  color: var(--gold);
+}
+.emergence-h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(24px, 3vw, 42px);
+  color: var(--text-hero);
+  letter-spacing: 0.01em;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.65);
+}
+.gold-italic {
+  font-style: italic;
+  color: var(--gold);
 }
 
 /* ============================================================
@@ -963,6 +1091,8 @@ body {
   .director { padding: 84px 36px; }
   .quote-band { padding: 56px 36px; }
   .contact { padding: 84px 36px; }
+  .manifesto { padding: 100px 36px; }
+  .emergence { height: clamp(360px, 56vw, 520px); }
   .contact-grid { gap: 56px; }
   .footer { padding: 28px 36px; }
 
@@ -1008,6 +1138,12 @@ body {
 
   .director { padding: 56px 22px; }
   .director-grid { grid-template-columns: 1fr; gap: 28px; }
+
+  .manifesto { padding: 72px 22px; }
+  .manifesto-eyebrow { margin-bottom: 36px; font-size: 11px; letter-spacing: 0.32em; }
+  .manifesto-rule { margin: 36px auto 20px; }
+  .emergence { height: clamp(280px, 80vw, 420px); }
+  .emergence-caption { bottom: 36px; }
 
   .quote-band { padding: 44px 22px; }
   .quote-band .inner { flex-direction: column; align-items: flex-start; gap: 28px; }
