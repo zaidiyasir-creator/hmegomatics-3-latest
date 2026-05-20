@@ -194,35 +194,6 @@ export default function Home() {
       {/* ============ HERO ============ */}
       <header className="hero" data-testid="hero">
         <Hero3D />
-
-        <div className="hero-meta-top">
-          <div className="item">
-            <span className="eyebrow">EST · 2024</span>
-            <span className="eyebrow-muted">SEREMBAN · 2.7297° N</span>
-          </div>
-          <div className="item right">
-            <span className="eyebrow">LJT 617</span>
-            <span className="eyebrow-muted">101.9381° E</span>
-          </div>
-        </div>
-
-        <div className="hero-overlay">
-          <div className="eyebrow" data-testid="hero-eyebrow">
-            LAND SURVEYOR · LICENSED UNDER ACT 458 (REVISED 2024)
-          </div>
-          <h1 className="hero-title" data-testid="hero-title">
-            <span className="gold">HM</span>GEOMATICS
-          </h1>
-          <div className="hero-divider" />
-          <div className="eyebrow-muted">
-            WORLD DYNAMIC GEOMATIC LEADER · SEREMBAN, MALAYSIA
-          </div>
-        </div>
-
-        <div className="scroll-cue" aria-hidden>
-          <span className="line" />
-          <span className="label">Discover</span>
-        </div>
       </header>
 
       {/* ============ QUOTE BAND ============ */}

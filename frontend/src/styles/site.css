@@ -237,6 +237,11 @@ body {
   z-index: 1;
   background: transparent;
 }
+/* Iframe (logo reveal) fills the hero exactly */
+.hero-canvas.hero-reveal-iframe {
+  border: 0;
+  display: block;
+}
 
 .hero-meta-top {
   position: absolute;
