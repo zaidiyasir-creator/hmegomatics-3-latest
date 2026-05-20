@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HM Geomatics · Logo Reveal</title>
+<style>
+  /* Self-contained palette / type tokens (replaces ../colors_and_type.css) */
+  :root {
+    --ivory: #F4EFE6;
+    --brass: #B08A4A;
+    --brass-soft: #D9C49A;
+    --graphite: #1a1a1a;
+    --emerald: #0E5A3A;
+    --serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+    --sans: "Montserrat", Inter, system-ui, sans-serif;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500&display=swap">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: #050a08;
+    overflow: hidden;
+    font-family: var(--sans);
+    color: var(--ivory);
+  }
+
+  /* ===================================================================
+     STAGE — the dark void, lit like a watch in a vitrine
+     =================================================================== */
+  .stage {
+    position: fixed; inset: 0;
+    perspective: 2200px;
+    perspective-origin: 50% 42%;
+    overflow: hidden;
+    /* Deep emerald-to-black radial light from upper-centre */
+    background:
+      radial-gradient(ellipse 140% 90% at 50% 35%, #0a2418 0%, #061410 35%, #02080a 75%, #000 100%);
+  }
+
+  /* warm bottom plate (suggests gold on a base) */
+  .stage::before {
+    content: '';
+    position: absolute; left: 0; right: 0; bottom: 0; height: 38%;
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, rgba(176,138,74,0.18) 0%, rgba(176,138,74,0) 70%);
+    pointer-events: none;
+  }
+  /* film vignette */
+  .stage::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.65) 100%);
+    pointer-events: none;
+  }
+
+  /* ===================================================================
+     BRAND CHROME — brass top edge, corner inscriptions, monogram
+     =================================================================== */
+  .brand-edge {
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #B08A4A 15%, #D9C49A 50%, #B08A4A 85%, transparent 100%);
+    transform: scaleX(0); transform-origin: 50% 50%;
+    animation: edgeIn 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) 200ms forwards;
+    z-index: 10;
+  }
+  @keyframes edgeIn { to { transform: scaleX(1); } }
+
+  .corner {
+    position: absolute; z-index: 12;
+    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(244,239,230,0.6); font-variant-numeric: tabular-nums;
+    opacity: 0;
+    animation: cornerIn 1200ms cubic-bezier(0.22, 0.61, 0.36, 1) 1400ms forwards;
+  }
+  @keyframes cornerIn { to { opacity: 1; } }
+  .corner.tl { top: 48px; left: 56px; }
+  .corner.tr { top: 48px; right: 56px; text-align: right; line-height: 1.7; }
+  .corner.bl { bottom: 48px; left: 56px; }
+  .corner.br { bottom: 48px; right: 56px; text-align: right; line-height: 1.7; }
+  .corner .v { color: rgba(244,239,230,0.95); display: block; }
+
+  /* ===================================================================
+     LOGO — perspective 3D entry + metal gleam
+     =================================================================== */
+  .logo-deck {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(46vw, 620px);
+    aspect-ratio: 1280 / 1089;
+    transform-style: preserve-3d;
+    z-index: 5;
+  }
+
+  .logo-pane {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(0deg) rotateY(28deg) scale(0.82);
+    opacity: 0;
+    filter: brightness(0.85) saturate(1.05) contrast(1.05);
+    animation:
+      logoEntry 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) 900ms forwards,
+      logoFloat 7000ms ease-in-out 3500ms infinite alternate;
+  }
+  @keyframes logoEntry {
+    0%   { transform: rotateY(28deg) rotateX(8deg) scale(0.82); opacity: 0; filter: brightness(0.6) saturate(0.85); }
+    60%  { opacity: 1; }
+    100% { transform: rotateY(0deg) rotateX(0deg) scale(1); opacity: 1; filter: brightness(1.05) saturate(1.1) contrast(1.05) drop-shadow(0 30px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 40px rgba(176,138,74,0.18)); }
+  }
+  @keyframes logoFloat {
+    0%   { transform: rotateY(-2deg) rotateX(0.5deg) scale(1.0); }
+    100% { transform: rotateY(2deg) rotateX(-0.5deg) scale(1.01); }
+  }
+
+  .logo-img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* GLEAM — a bright diagonal stripe masked by the logo itself.
+     Slides across, brightening the metal as it passes. */
+  .gleam {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: screen;
+    background:
+      linear-gradient(115deg,
+        transparent 30%,
+        rgba(255,255,255,0.0) 42%,
+        rgba(255,245,220,0.55) 49%,
+        rgba(255,255,255,0.85) 50%,
+        rgba(255,245,220,0.55) 51%,
+        rgba(255,255,255,0.0) 58%,
+        transparent 70%);
+    background-size: 220% 220%;
+    background-position: 130% -30%;
+    -webkit-mask-image: url('/hm-logo.png');
+            mask-image: url('/hm-logo.png');
+    -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    animation: gleamPass 2800ms cubic-bezier(0.4, 0.0, 0.2, 1) 2800ms forwards,
+               gleamPass2 4000ms cubic-bezier(0.4, 0.0, 0.2, 1) 6200ms forwards;
+  }
+  @keyframes gleamPass {
+    0%   { opacity: 0; background-position: 130% -30%; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { opacity: 0; background-position: -30% 130%; }
+  }
+  @keyframes gleamPass2 {
+    0%   { opacity: 0; background-position: -30% 130%; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.7; }
+    100% { opacity: 0; background-position: 130% -30%; }
+  }
+
+  /* HALO — soft brass radial glow behind the logo */
+  .halo {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(80vw, 1100px); aspect-ratio: 1/1;
+    background: radial-gradient(circle, rgba(176,138,74,0.22) 0%, rgba(176,138,74,0.08) 25%, rgba(176,138,74,0) 55%);
+    opacity: 0; z-index: 2; pointer-events: none;
+    animation: haloIn 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) 800ms forwards,
+               haloBreathe 6000ms ease-in-out 3500ms infinite alternate;
+  }
+  @keyframes haloIn { to { opacity: 1; } }
+  @keyframes haloBreathe { 0% { opacity: 0.9; } 100% { opacity: 1.1; } }
+
+  /* GROUND PLATE — a subtle reflective base under the logo */
+  .ground {
+    position: absolute; left: 50%; bottom: 22%;
+    transform: translateX(-50%) rotateX(72deg);
+    width: 40%; height: 6px;
+    background: radial-gradient(ellipse at center, rgba(176,138,74,0.5) 0%, rgba(176,138,74,0) 70%);
+    filter: blur(8px);
+    opacity: 0;
+    animation: groundIn 1800ms ease-out 1800ms forwards;
+    z-index: 3; pointer-events: none;
+  }
+  @keyframes groundIn { to { opacity: 1; } }
+
+  /* ===================================================================
+     WORDMARK + TAGLINE — settle in after the logo
+     =================================================================== */
+  .wordmark-block {
+    position: absolute; left: 50%; bottom: 18%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    z-index: 6;
+    animation: wordIn 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) 3200ms forwards;
+  }
+  @keyframes wordIn {
+    0%   { opacity: 0; transform: translate(-50%, 16px); }
+    100% { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* Brass mini divider */
+  .mini-divider {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin-bottom: 22px;
+  }
+  .mini-divider::before, .mini-divider::after {
+    content: ''; width: 56px; height: 1px;
+    background: linear-gradient(90deg, transparent, #B08A4A 50%, transparent);
+  }
+  .mini-divider .dot {
+    width: 5px; height: 5px;
+    background: #B08A4A;
+    transform: rotate(45deg);
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4.4vw, 64px);
+    font-weight: 400;
+    letter-spacing: 0.012em;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(180deg, #F4EFE6 0%, #C9A874 60%, #8C6B33 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+            color: transparent;
+    filter: drop-shadow(0 2px 12px rgba(176,138,74,0.25));
+  }
+
+  .tagline {
+    margin-top: 18px;
+    font-size: 11.5px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: rgba(244,239,230,0.7);
+    font-weight: 500;
+  }
+
+  /* ===================================================================
+     PARTICLES — tiny brass motes drifting upward
+     =================================================================== */
+  .motes { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .mote {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #D9C49A;
+    border-radius: 50%;
+    opacity: 0;
+    box-shadow: 0 0 6px rgba(217,196,154,0.7);
+    animation: float 12s linear infinite;
+  }
+  @keyframes float {
+    0%   { opacity: 0; transform: translateY(40px); }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-100vh); }
+  }
+
+  /* Film grain (very subtle) */
+  .grain {
+    position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    opacity: 0.08; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* ===================================================================
+     REPLAY CONTROL
+     =================================================================== */
+  .replay {
+    position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 26px;
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(244,239,230,0.85);
+    background: transparent;
+    border: 1px solid rgba(176,138,74,0.6);
+    cursor: pointer;
+    opacity: 0;
+    transition: background 360ms var(--ease), color 360ms var(--ease), border-color 360ms var(--ease);
+    animation: replayIn 800ms ease-out 7800ms forwards;
+    z-index: 30;
+  }
+  .replay:hover { background: #B08A4A; color: #050a08; border-color: #B08A4A; }
+  @keyframes replayIn { to { opacity: 1; } }
+
+  /* Replay flash */
+  @keyframes flashRun {
+    0% { opacity: 1; } 100% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="brand-edge"></div>
+
+  <!-- Corner inscriptions -->
+  <div class="corner tl">HM Geomatics · MMXXVI</div>
+  <div class="corner tr">
+    <span>3.1390° N</span>
+    <span class="v">101.6869° E</span>
+  </div>
+  <div class="corner bl">Petaling Jaya · Malaysia</div>
+  <div class="corner br">
+    <span>Licensed</span>
+    <span class="v">PLS 2104 · LJUBM</span>
+  </div>
+
+  <!-- Drifting motes -->
+  <div class="motes" id="motes"></div>
+
+  <!-- Halo behind logo -->
+  <div class="halo"></div>
+  <div class="ground"></div>
+
+  <!-- Logo with gleam -->
+  <div class="logo-deck">
+    <div class="logo-pane">
+      <img class="logo-img" src="/hm-logo.png" alt="HM Geomatics"/>
+      <div class="gleam"></div>
+    </div>
+  </div>
+
+  <!-- Replay -->
+  <button class="replay" id="replay">
+    <span>Replay</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
+      <path d="M4 7 A 8 8 0 1 1 4 17"/>
+      <polyline points="2 3 4 7 8 5"/>
+    </svg>
+  </button>
+
+  <!-- Film grain overlay -->
+  <div class="grain"></div>
+</div>
+
+<script>
+  // Seed drifting motes
+  const motes = document.getElementById('motes');
+  const N = 18;
+  for (let i = 0; i < N; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.left = (Math.random() * 100) + '%';
+    m.style.bottom = (-10 - Math.random() * 30) + '%';
+    m.style.animationDelay = (Math.random() * 12) + 's';
+    m.style.animationDuration = (10 + Math.random() * 8) + 's';
+    m.style.opacity = (0.3 + Math.random() * 0.5);
+    if (Math.random() > 0.7) { m.style.width = '3px'; m.style.height = '3px'; }
+    motes.appendChild(m);
+  }
+
+  // Replay — re-run the entire sequence by re-cloning the stage's animated children
+  document.getElementById('replay').addEventListener('click', () => {
+    const stage = document.getElementById('stage');
+    const animated = stage.querySelectorAll('.brand-edge, .corner, .logo-pane, .gleam, .halo, .ground, .replay');
+    animated.forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  });
+</script>
+
+</body>
+</html>
