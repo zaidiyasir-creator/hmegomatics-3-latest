@@ -310,8 +310,12 @@ export default function Home() {
         </div>
 
         <div className="director-grid reveal" style={{ marginTop: 30 }}>
-          <div className="avatar" aria-hidden>
-            MH
+          <div className="director-portrait" aria-hidden>
+            <img
+              src="/director-hazwan.jpg"
+              alt="LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan"
+              data-testid="director-photo"
+            />
           </div>
           <div>
             <h3>LSr Muhammad Hazwan bin Dato&apos; LSr Mohd Mazlan</h3>
