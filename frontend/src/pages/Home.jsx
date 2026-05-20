@@ -479,7 +479,17 @@ export default function Home() {
       {/* ============ FOOTER ============ */}
       <footer className="footer" data-testid="footer">
         <span>© 2026 HM Geomatics Sdn. Bhd. · All rights reserved</span>
-        <span>SSM 202401037321 (1583168-K)</span>
+        <span style={{ display: "inline-flex", gap: 18, alignItems: "center" }}>
+          <a
+            href="/sitemap.xml"
+            style={{ color: "inherit", textDecoration: "none" }}
+            data-testid="footer-sitemap"
+          >
+            Sitemap
+          </a>
+          <span style={{ opacity: 0.4 }}>·</span>
+          <span>SSM 202401037321 (1583168-K)</span>
+        </span>
       </footer>
 
       {/* ============ FLOATING CHAT FAB ============ */}

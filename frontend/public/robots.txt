@@ -1,0 +1,10 @@
+# HM Geomatics Sdn. Bhd.
+# https://precision-dark-hero.preview.emergentagent.com
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://precision-dark-hero.preview.emergentagent.com/sitemap.xml
