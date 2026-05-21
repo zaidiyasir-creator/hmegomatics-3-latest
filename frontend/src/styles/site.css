@@ -383,6 +383,54 @@ body {
   text-transform: uppercase;
 }
 
+/* ---- Hero sound toggle ---- */
+.hero-sound {
+  position: absolute;
+  left: clamp(20px, 3vw, 60px);
+  bottom: clamp(20px, 2.4vw, 36px);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 12px;
+  background: rgba(10, 10, 10, 0.4);
+  border: 0.5px solid rgba(201, 147, 42, 0.45);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--sans);
+  font-size: clamp(9.5px, 0.78vw, 11px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.hero-sound:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(10, 10, 10, 0.65);
+}
+.hero-sound.is-on {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.hero-sound-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+.hero-sound-label {
+  line-height: 1;
+}
+@media (max-width: 600px) {
+  .hero-sound { padding: 8px 12px 8px 10px; }
+  .hero-sound-label { display: none; }
+}
+
+
 /* ============================================================
    QUOTE BAND (cream)
    ============================================================ */
