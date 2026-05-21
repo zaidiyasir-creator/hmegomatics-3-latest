@@ -1076,8 +1076,11 @@ body {
   z-index: 80;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 22px 14px 16px;
+  justify-content: center;
+  gap: 0;
+  width: 56px;
+  height: 56px;
+  padding: 0;
   background: var(--gold);
   color: #0a0a0a;
   font-family: var(--sans);
@@ -1109,18 +1112,18 @@ body {
     0 0 0 1px rgba(232, 192, 96, 0.55);
 }
 .chat-fab-icon {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #0a0a0a;
-  color: var(--gold);
+  background: transparent;
+  color: #0a0a0a;
   flex-shrink: 0;
 }
 .chat-fab-label {
-  white-space: nowrap;
+  display: none;
 }
 
 /* Hide the "Made with Emergent" platform badge (when present) */
@@ -1141,11 +1144,11 @@ iframe[src*="emergent-badge"] {
   .chat-fab {
     right: 16px;
     bottom: 20px;
-    padding: 12px 18px 12px 14px;
-    gap: 10px;
+    width: 48px;
+    height: 48px;
   }
   .chat-fab-icon { width: 22px; height: 22px; }
-  .chat-fab-icon svg { width: 14px; height: 14px; }
+  .chat-fab-icon svg { width: 18px; height: 18px; }
 }
 
 /* ============================================================
