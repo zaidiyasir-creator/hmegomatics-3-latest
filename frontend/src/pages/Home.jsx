@@ -202,13 +202,7 @@ export default function Home() {
           <h1 className="hero-title" data-testid="hero-title">
             <span className="gold">HM</span>GEOMATICS
           </h1>
-          <div className="hero-divider" />
           <div className="eyebrow-muted">{c.hero_tagline}</div>
-        </div>
-
-        <div className="scroll-cue" aria-hidden>
-          <span className="line" />
-          <span className="label">Discover</span>
         </div>
       </header>
 
