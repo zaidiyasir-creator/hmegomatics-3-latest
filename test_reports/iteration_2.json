@@ -1,0 +1,38 @@
+{
+  "summary": "Full backend + frontend regression for HM Geomatics rewrite (JWT+bcrypt auth, lifespan migration, CMS, projects, upload, email no-op). Backend: 19 pytest tests pass, 1 brute-force test skipped intentionally. Frontend: 10/10 E2E flows pass via Playwright — admin login (wrong + correct), tabbed dashboard (enquiries/content/projects), CMS edit + save propagates to public Home, project create → 'Selected Work' renders on Home → delete cleanup, sign out. Bcrypt hash verified $2b$12$ prefix, indexes on users.email (unique), content.key (unique), projects (order+created_at), enquiries.created_at all present. Admin seeded idempotently (count=1 after restart).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_hmgeomatics_v2.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(Optional) Wire SMTP_HOST/USER/PASSWORD/FROM in /app/backend/.env to enable enquiry email — currently logs 'SMTP not configured — skipping email notification' as designed.",
+    "(Optional) Bcrypt cost 12 is fine; rotate JWT_SECRET before production deploy.",
+    "(Optional) Brute-force is in-memory per IP — will reset on container restart. Acceptable for single-process; move to Redis if scaling horizontally."
+  ],
+  "critical_code_review_comments": [
+    "server.py upload endpoint reads entire file into memory before size check (line 615-617). Acceptable for 8 MB cap but consider streaming check for larger limits.",
+    "_login_attempts in-memory dict can grow unbounded if attacker rotates IPs — acceptable for current scope but worth a periodic prune.",
+    "CORS allow_origins defaults to ['*'] with allow_credentials=True which browsers will reject for credentialed requests. Set explicit origins in production .env.",
+    "Admin.jsx Content tab does not auto-refetch after save — relies on user reload. Minor; not blocking.",
+    "Home.jsx FALLBACK constant duplicates SiteContent defaults (DRY) — fine as a safety net but worth noting."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_hmgeomatics_v2.py"
+  ],
+  "success_rate": {"backend": "100% (19/19 run, 1 skipped intentionally)", "frontend": "100% (10/10 flows)"},
+  "test_credentials": "admin@hmgeomatics.com / hmgeomatics2026 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Created/cleaned TEST_ prefixed enquiries + 1 TEST_UI_Project_* during tests. All cleanup steps verified — restored hero_tagline to original after edit test.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend tests at /app/backend/tests/test_hmgeomatics_v2.py. JWT auth header: 'Authorization: Bearer <access_token>'. Brute force is in-memory at 5/15min per IP — running test_rate_limit_after_5_failures will lock the test IP for 15 min, so it is skipped by default; un-skip manually if needed. Frontend test selectors: admin-login-page, admin-email-input, admin-password-input, admin-login-submit, admin-dashboard, tab-enquiries/content/projects, cms-save-content, project-title, project-submit, selected-work-section. Image upload returns {url: '/api/uploads/<uuid>.ext'} and file is served via StaticFiles at /api/uploads/*. SMTP env vars are intentionally blank — backend logs and no-ops gracefully.",
+  "rca of the issue": "No bugs found. All 32+ CMS fields hydrate to public Home, Selected Work section conditional-renders on projects.length > 0, bcrypt+JWT auth works correctly with 401 on bad/missing tokens, lifespan migration successful (no deprecation warnings), upload validates extension whitelist + 8 MB cap. Backward-compat /api/admin/login still issues JWT for the legacy password-only payload."
+}

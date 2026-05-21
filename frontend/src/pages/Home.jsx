@@ -5,65 +5,73 @@ import Nav from "@/components/Nav";
 import HeroVideo from "@/components/HeroVideo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const BACKEND = process.env.REACT_APP_BACKEND_URL;
 
-const SERVICES = [
-  {
-    n: "01",
-    icon: "/icons/land-boundary-survey.svg",
-    t: "Land Boundary Survey",
-    d: "Accurate demarcation and legal documentation for residential, commercial, and industrial properties.",
-  },
-  {
-    n: "02",
-    icon: "/icons/topographic-mapping.svg",
-    t: "Topographic Mapping",
-    d: "High-precision terrain mapping and contour generation for development planning and engineering design.",
-  },
-  {
-    n: "03",
-    icon: "/icons/geomatic-survey-works.svg",
-    t: "Geomatic Survey Works",
-    d: "Advanced geospatial data integrating GIS, CAD, and cutting-edge measurement technologies.",
-  },
-  {
-    n: "04",
-    icon: "/icons/engineering-drawing.svg",
-    t: "Engineering Drawing",
-    d: "Detailed technical drawings for private developments and public infrastructure projects.",
-  },
-  {
-    n: "05",
-    icon: "/icons/construction-monitoring.svg",
-    t: "Construction Monitoring",
-    d: "Ongoing site supervision and progress monitoring for large-scale subdivision developments.",
-  },
-  {
-    n: "06",
-    icon: "/icons/hydrographic-survey.svg",
-    t: "Hydrographic Survey",
-    d: "FIG/IHO/ICA Category A certified hydrographic surveys for maritime and coastal applications.",
-  },
-];
+/* Fallback content used if /api/content fails — keeps the site readable. */
+const FALLBACK = {
+  hero_eyebrow_left: "EST · 2024",
+  hero_eyebrow_left_sub: "SEREMBAN · 2.7297° N",
+  hero_eyebrow_right: "LJT 617",
+  hero_eyebrow_right_sub: "101.9381° E",
+  hero_tagline: "WORLD DYNAMIC GEOMATIC LEADER · SEREMBAN, MALAYSIA",
+  quote_text:
+    "Hard work and persistence have brought us here. Our strength has always been a focus on our people, our teams, and our clients.",
+  quote_attribution_role: "Managing Director",
+  quote_attribution_name: "LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan",
+  quote_attribution_credential: "Licensed Land Surveyor",
+  services: [
+    { n: "01", icon: "/icons/land-boundary-survey.svg", t: "Land Boundary Survey", d: "Accurate demarcation and legal documentation." },
+    { n: "02", icon: "/icons/topographic-mapping.svg", t: "Topographic Mapping", d: "High-precision terrain mapping." },
+    { n: "03", icon: "/icons/geomatic-survey-works.svg", t: "Geomatic Survey Works", d: "GIS, CAD, and measurement tech." },
+    { n: "04", icon: "/icons/engineering-drawing.svg", t: "Engineering Drawing", d: "Technical drawings for projects." },
+    { n: "05", icon: "/icons/construction-monitoring.svg", t: "Construction Monitoring", d: "Ongoing site supervision." },
+    { n: "06", icon: "/icons/hydrographic-survey.svg", t: "Hydrographic Survey", d: "FIG/IHO/ICA Category A certified." },
+  ],
+  manifesto_eyebrow: "Our Promise · MMXXVI",
+  manifesto_words: ["Precision.", "Innovation.", "Excellence."],
+  manifesto_tagline: "Three principles guiding every line, every level, every legal boundary we deliver.",
+  about_intro:
+    "At HM Geomatics Sdn. Bhd., we deliver efficient, accurate, and integrated land surveying services.",
+  values: [
+    ["R", "Respect"],
+    ["A", "Accountability"],
+    ["S", "Sustainability"],
+    ["E", "Excellence"],
+    ["C", "Cooperative"],
+    ["C", "Customer-Centricity"],
+  ],
+  director_name: "LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan",
+  director_role: "Managing Director · Licensed Land Surveyor",
+  director_bio: "With over a decade of experience in land surveying and geomatics, LSr Hazwan leads HM Geomatics with a commitment to precision, innovation, and client excellence.",
+  director_photo: "/director-hazwan.jpg",
+  director_quals: [
+    "Licensed Land Surveyor · Act 458",
+    "FIG/IHO/ICA Category A",
+    "CUUDS-LS 2024",
+    "B.Eng Geomatic (Hons) · UTM 2014",
+    "MAALS Member 2020",
+  ],
+  address_line1: "No. 20, Betaria Business Centre",
+  address_line2: "Jalan Durian Emas 3, Off Jalan Dato' Siamang Gagap",
+  address_line3: "70100 Seremban, Negeri Sembilan, Malaysia",
+  phone_office: "+606 761 0867",
+  phone_director: "+6013 315 8958",
+  whatsapp_number: "60133158958",
+  ssm: "SSM: 202401037321 (1583168-K)",
+  ljt: "LJT Reg. No: LJT 617",
+  mof: "MOF Cert: J10961822104057517",
+  cert_validity: "Valid: 10/01/2025 – 09/01/2028",
+  practice_cert: "Practice Name Cert No: 01170",
+  hours: "Monday — Friday · 09:00 – 18:00 MYT · Field visits arranged by appointment",
+};
 
-const VALUES = [
-  ["R", "Respect"],
-  ["A", "Accountability"],
-  ["S", "Sustainability"],
-  ["E", "Excellence"],
-  ["C", "Cooperative"],
-  ["C", "Customer-Centricity"],
-];
-
-const QUALS = [
-  "Licensed Land Surveyor · Act 458",
-  "FIG/IHO/ICA Category A",
-  "CUUDS-LS 2024",
-  "B.Eng Geomatic (Hons) · UTM 2014",
-  "MAALS Member 2020",
-];
+const resolveImg = (src) => {
+  if (!src) return src;
+  return src.startsWith("/api/uploads") ? `${BACKEND}${src}` : src;
+};
 
 /* ---- IntersectionObserver hook for .reveal and .reveal-up ---- */
-function useReveal() {
+function useReveal(deps = []) {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal, .reveal-up");
     const io = new IntersectionObserver(
@@ -79,18 +87,13 @@ function useReveal() {
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }
 
 /* ---- Enquiry form ---- */
 function EnquiryForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [busy, setBusy] = useState(false);
 
   const onChange = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -107,10 +110,7 @@ function EnquiryForm() {
       toast.success("Enquiry sent · we will respond within 2 working days");
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (err) {
-      const msg =
-        err?.response?.data?.detail?.[0]?.msg ||
-        err?.response?.data?.detail ||
-        "Could not send. Please try again.";
+      const msg = err?.response?.data?.detail?.[0]?.msg || err?.response?.data?.detail || "Could not send. Please try again.";
       toast.error(typeof msg === "string" ? msg : "Could not send. Please try again.");
     } finally {
       setBusy(false);
@@ -118,71 +118,32 @@ function EnquiryForm() {
   };
 
   return (
-    <form
-      className="enquiry-form"
-      onSubmit={onSubmit}
-      data-testid="enquiry-form"
-    >
+    <form className="enquiry-form" onSubmit={onSubmit} data-testid="enquiry-form">
       <div className="row">
         <div className="field">
           <label htmlFor="enq-name">Name</label>
-          <input
-            id="enq-name"
-            data-testid="enquiry-name"
-            value={form.name}
-            onChange={onChange("name")}
-            autoComplete="name"
-          />
+          <input id="enq-name" data-testid="enquiry-name" value={form.name} onChange={onChange("name")} autoComplete="name" />
         </div>
         <div className="field">
           <label htmlFor="enq-email">Email</label>
-          <input
-            id="enq-email"
-            type="email"
-            data-testid="enquiry-email"
-            value={form.email}
-            onChange={onChange("email")}
-            autoComplete="email"
-          />
+          <input id="enq-email" type="email" data-testid="enquiry-email" value={form.email} onChange={onChange("email")} autoComplete="email" />
         </div>
       </div>
       <div className="row">
         <div className="field">
           <label htmlFor="enq-phone">Phone</label>
-          <input
-            id="enq-phone"
-            data-testid="enquiry-phone"
-            value={form.phone}
-            onChange={onChange("phone")}
-            autoComplete="tel"
-          />
+          <input id="enq-phone" data-testid="enquiry-phone" value={form.phone} onChange={onChange("phone")} autoComplete="tel" />
         </div>
         <div className="field">
           <label htmlFor="enq-subject">Subject</label>
-          <input
-            id="enq-subject"
-            data-testid="enquiry-subject"
-            value={form.subject}
-            onChange={onChange("subject")}
-          />
+          <input id="enq-subject" data-testid="enquiry-subject" value={form.subject} onChange={onChange("subject")} />
         </div>
       </div>
       <div className="field">
         <label htmlFor="enq-msg">Message</label>
-        <textarea
-          id="enq-msg"
-          rows={4}
-          data-testid="enquiry-message"
-          value={form.message}
-          onChange={onChange("message")}
-        />
+        <textarea id="enq-msg" rows={4} data-testid="enquiry-message" value={form.message} onChange={onChange("message")} />
       </div>
-      <button
-        type="submit"
-        className="btn-gold"
-        disabled={busy}
-        data-testid="enquiry-submit"
-      >
+      <button type="submit" className="btn-gold" disabled={busy} data-testid="enquiry-submit">
         {busy ? "Sending…" : "Send Enquiry"}
       </button>
     </form>
@@ -190,8 +151,33 @@ function EnquiryForm() {
 }
 
 export default function Home() {
-  useReveal();
   const topRef = useRef(null);
+  const [c, setC] = useState(FALLBACK);
+  const [projects, setProjects] = useState([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [contentRes, projectsRes] = await Promise.all([
+          axios.get(`${API}/content`),
+          axios.get(`${API}/projects`),
+        ]);
+        // Merge so any missing fields fall back gracefully
+        setC({ ...FALLBACK, ...contentRes.data });
+        setProjects(projectsRes.data || []);
+      } catch (err) {
+        console.warn("Could not load content from API, using fallback", err);
+      } finally {
+        setReady(true);
+      }
+    })();
+  }, []);
+
+  // Re-run reveal observer when content is ready (so new DOM gets observed)
+  useReveal([ready, projects.length]);
+
+  const whatsappHref = `https://wa.me/${c.whatsapp_number}?text=Hello%20HM%20Geomatics%2C%20I%20would%20like%20to%20enquire%20about%20your%20surveying%20services.`;
 
   return (
     <div ref={topRef} id="top" data-testid="home-page">
@@ -203,12 +189,12 @@ export default function Home() {
 
         <div className="hero-meta-top">
           <div className="item">
-            <span className="eyebrow">EST · 2024</span>
-            <span className="eyebrow-muted">SEREMBAN · 2.7297° N</span>
+            <span className="eyebrow">{c.hero_eyebrow_left}</span>
+            <span className="eyebrow-muted">{c.hero_eyebrow_left_sub}</span>
           </div>
           <div className="item right">
-            <span className="eyebrow">LJT 617</span>
-            <span className="eyebrow-muted">101.9381° E</span>
+            <span className="eyebrow">{c.hero_eyebrow_right}</span>
+            <span className="eyebrow-muted">{c.hero_eyebrow_right_sub}</span>
           </div>
         </div>
 
@@ -217,9 +203,7 @@ export default function Home() {
             <span className="gold">HM</span>GEOMATICS
           </h1>
           <div className="hero-divider" />
-          <div className="eyebrow-muted">
-            WORLD DYNAMIC GEOMATIC LEADER · SEREMBAN, MALAYSIA
-          </div>
+          <div className="eyebrow-muted">{c.hero_tagline}</div>
         </div>
 
         <div className="scroll-cue" aria-hidden>
@@ -231,17 +215,12 @@ export default function Home() {
       {/* ============ QUOTE BAND ============ */}
       <section className="quote-band reveal" data-testid="quote-band">
         <div className="inner">
-          <blockquote>
-            Hard work and persistence have brought us here. Our strength has
-            always been a focus on our people, our teams, and our clients.
-          </blockquote>
+          <blockquote>{c.quote_text}</blockquote>
           <div className="quote-attr">
-            <span className="label">Managing Director</span>
-            LSr Muhammad Hazwan
+            <span className="label">{c.quote_attribution_role}</span>
+            {c.quote_attribution_name}
             <br />
-            bin Dato&apos; LSr Mohd Mazlan
-            <br />
-            Licensed Land Surveyor
+            {c.quote_attribution_credential}
           </div>
         </div>
       </section>
@@ -250,34 +229,27 @@ export default function Home() {
       <section id="services" className="services" data-testid="services-section">
         <div className="services-head reveal">
           <div>
-            <div className="eyebrow">Our Expertise · 01 — 06</div>
+            <div className="eyebrow">
+              Our Expertise · {c.services?.[0]?.n || "01"} — {c.services?.[c.services.length - 1]?.n || "06"}
+            </div>
             <h2 className="section-heading large" style={{ marginTop: 18 }}>
               Precision at <span className="italic">every scale</span>.
             </h2>
             <span className="gold-bar" />
           </div>
           <p>
-            Six disciplines, one licensed practice. From single lots to
-            multi-level apartments, from private developments to public
-            infrastructure.
+            {c.services?.length || 6} disciplines, one licensed practice. From single lots to multi-level apartments, from private developments to public infrastructure.
           </p>
         </div>
 
         <div className="services-grid">
-          {SERVICES.map((s) => (
-            <article
-              key={s.n}
-              className="service-cell reveal"
-              data-testid={`service-${s.n}`}
-            >
+          {(c.services || []).map((s) => (
+            <article key={s.n + s.t} className="service-cell reveal" data-testid={`service-${s.n}`}>
               <div className="service-head">
                 <span className="num">{s.n}</span>
                 <span
                   className="service-icon"
-                  style={{
-                    WebkitMaskImage: `url(${s.icon})`,
-                    maskImage: `url(${s.icon})`,
-                  }}
+                  style={{ WebkitMaskImage: `url(${s.icon})`, maskImage: `url(${s.icon})` }}
                   aria-hidden="true"
                 />
               </div>
@@ -289,23 +261,61 @@ export default function Home() {
         <div className="services-foot" />
       </section>
 
+      {/* ============ SELECTED WORK ============ */}
+      {projects.length > 0 && (
+        <section id="work" className="selected-work" data-testid="selected-work-section">
+          <div className="sw-head reveal">
+            <div>
+              <div className="eyebrow" style={{ color: "var(--gold)" }}>Selected Work</div>
+              <h2 className="section-heading large" style={{ marginTop: 18, color: "var(--text-dark)" }}>
+                A handful of <span className="italic">projects</span>.
+              </h2>
+              <span className="gold-bar" />
+            </div>
+            <p>
+              From boundary demarcation in Seremban to topographic missions across Negeri Sembilan — a glimpse of recent commissions delivered with the precision our clients trust.
+            </p>
+          </div>
+
+          <div className="sw-grid">
+            {projects.map((p) => (
+              <article key={p.id} className="sw-card reveal" data-testid={`project-card-${p.id}`}>
+                <div className="sw-image">
+                  {p.image && <img src={resolveImg(p.image)} alt={p.title} loading="lazy" />}
+                </div>
+                <div className="sw-body">
+                  {(p.category || p.location || p.year) && (
+                    <div className="sw-meta">
+                      {p.category && <span>{p.category}</span>}
+                      {p.location && <span>{p.location}</span>}
+                      {p.year && <span>{p.year}</span>}
+                    </div>
+                  )}
+                  <h3 className="sw-title">{p.title}</h3>
+                  {p.description && <p className="sw-desc">{p.description}</p>}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ============ MANIFESTO (dark interlude) ============ */}
       <section className="manifesto" data-testid="manifesto-section">
         <div className="manifesto-inner">
-          <div className="manifesto-eyebrow">Our Promise · MMXXVI</div>
-          <h2
-            className="manifesto-words reveal-up"
-            data-testid="manifesto-words"
-          >
-            <span className="word ivory">Precision.</span>
-            <span className="word ivory">Innovation.</span>
-            <span className="word excellence">Excellence.</span>
+          <div className="manifesto-eyebrow">{c.manifesto_eyebrow}</div>
+          <h2 className="manifesto-words reveal-up" data-testid="manifesto-words">
+            {c.manifesto_words.map((w, i) => (
+              <span
+                key={i}
+                className={`word ${i === c.manifesto_words.length - 1 ? "excellence" : "ivory"}`}
+              >
+                {w}
+              </span>
+            ))}
           </h2>
           <div className="manifesto-rule" />
-          <p className="manifesto-tagline">
-            Three principles guiding every line, every level, every legal
-            boundary we deliver.
-          </p>
+          <p className="manifesto-tagline">{c.manifesto_tagline}</p>
         </div>
       </section>
 
@@ -317,26 +327,11 @@ export default function Home() {
             Accuracy, communication, <span style={{ color: "var(--gold)", fontStyle: "italic" }}>open mind</span>.
           </h2>
           <span className="gold-bar" />
-          <p>
-            At HM Geomatics Sdn. Bhd., we deliver efficient, accurate, and
-            integrated land surveying services. We combine knowledge, hands-on
-            experience, and the latest technologies — from single lots to
-            multi-level apartments, from private developments to major public
-            infrastructure.
-          </p>
+          <p>{c.about_intro}</p>
           <div className="about-stats">
-            <div>
-              <div className="num">2024</div>
-              <div className="label">Established</div>
-            </div>
-            <div>
-              <div className="num">15+</div>
-              <div className="label">Yrs Avg. Experience</div>
-            </div>
-            <div>
-              <div className="num">Act 458</div>
-              <div className="label">Licensed</div>
-            </div>
+            <div><div className="num">2024</div><div className="label">Established</div></div>
+            <div><div className="num">15+</div><div className="label">Yrs Avg. Experience</div></div>
+            <div><div className="num">Act 458</div><div className="label">Licensed</div></div>
           </div>
         </div>
 
@@ -347,12 +342,8 @@ export default function Home() {
           </h2>
           <span className="gold-bar" />
           <div className="values-list">
-            {VALUES.map(([letter, name], i) => (
-              <div
-                key={i}
-                className="values-row"
-                data-testid={`value-${name.toLowerCase()}`}
-              >
+            {c.values.map(([letter, name], i) => (
+              <div key={i} className="values-row" data-testid={`value-${name.toLowerCase()}`}>
                 <span className="values-letter">{letter}</span>
                 <span className="values-name">{name}</span>
               </div>
@@ -373,29 +364,15 @@ export default function Home() {
 
         <div className="director-grid reveal" style={{ marginTop: 30 }}>
           <div className="director-portrait" aria-hidden>
-            <img
-              src="/director-hazwan.jpg"
-              alt="LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan"
-              data-testid="director-photo"
-            />
+            <img src={resolveImg(c.director_photo)} alt={c.director_name} data-testid="director-photo" />
           </div>
           <div>
-            <h3>LSr Muhammad Hazwan bin Dato&apos; LSr Mohd Mazlan</h3>
-            <div className="role">
-              Managing Director · Licensed Land Surveyor
-            </div>
-            <p>
-              With over a decade of experience in land surveying and geomatics,
-              LSr Hazwan leads HM Geomatics with a commitment to precision,
-              innovation, and client excellence. Previously serving at Jurukur
-              Teras Sdn. Bhd. from 2010–2024, he brings unmatched field
-              expertise and professional credentials to every project.
-            </p>
+            <h3>{c.director_name}</h3>
+            <div className="role">{c.director_role}</div>
+            <p>{c.director_bio}</p>
             <div className="qual-tags">
-              {QUALS.map((q) => (
-                <span key={q} className="qual-tag">
-                  {q}
-                </span>
+              {c.director_quals.map((q) => (
+                <span key={q} className="qual-tag">{q}</span>
               ))}
             </div>
           </div>
@@ -416,29 +393,19 @@ export default function Home() {
           <div className="reveal">
             <div className="contact-block" data-testid="contact-address">
               <span className="contact-label">Address</span>
-              No. 20, Betaria Business Centre
-              <br />
-              Jalan Durian Emas 3, Off Jalan Dato&apos; Siamang Gagap
-              <br />
-              70100 Seremban, Negeri Sembilan, Malaysia
+              {c.address_line1}<br />
+              {c.address_line2}<br />
+              {c.address_line3}
             </div>
             <div className="contact-block">
               <span className="contact-label">Telephone</span>
-              +606 761 0867 (Office)
-              <br />
-              +6013 315 8958 (LSr Hazwan)
-              <br />
-              <br />
+              {c.phone_office} (Office)<br />
+              {c.phone_director} (LSr Hazwan)<br /><br />
               <a
-                href="https://wa.me/60133158958?text=Hello%20HM%20Geomatics%2C%20I%20would%20like%20to%20enquire%20about%20your%20surveying%20services."
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  color: "var(--gold)",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  letterSpacing: "0.02em",
-                }}
+                style={{ color: "var(--gold)", textDecoration: "none", fontWeight: 500, letterSpacing: "0.02em" }}
                 data-testid="inline-whatsapp-link"
               >
                 WhatsApp →
@@ -450,27 +417,20 @@ export default function Home() {
           <div className="reveal">
             <div className="contact-block">
               <span className="contact-label">Company Registration</span>
-              SSM: 202401037321 (1583168-K)
-              <br />
-              LJT Reg. No: LJT 617
-              <br />
-              MOF Cert: J10961822104057517
-              <br />
-              Valid: 10/01/2025 – 09/01/2028
+              {c.ssm}<br />
+              {c.ljt}<br />
+              {c.mof}<br />
+              {c.cert_validity}
             </div>
             <div className="contact-block">
               <span className="contact-label">Certification</span>
-              Licensed under Akta Juruukur Tanah Berlesen 1958
-              <br />
-              Registered with Lembaga Jurukur Tanah Malaysia
-              <br />
-              Practice Name Cert No: 01170
+              Licensed under Akta Juruukur Tanah Berlesen 1958<br />
+              Registered with Lembaga Jurukur Tanah Malaysia<br />
+              {c.practice_cert}
             </div>
             <div className="contact-block">
               <span className="contact-label">Hours</span>
-              Monday — Friday · 09:00 – 18:00 MYT
-              <br />
-              Field visits arranged by appointment
+              {c.hours}
             </div>
           </div>
         </div>
@@ -480,21 +440,17 @@ export default function Home() {
       <footer className="footer" data-testid="footer">
         <span>© 2026 HM Geomatics Sdn. Bhd. · All rights reserved</span>
         <span style={{ display: "inline-flex", gap: 18, alignItems: "center" }}>
-          <a
-            href="/sitemap"
-            style={{ color: "inherit", textDecoration: "none" }}
-            data-testid="footer-sitemap"
-          >
+          <a href="/sitemap" style={{ color: "inherit", textDecoration: "none" }} data-testid="footer-sitemap">
             Sitemap
           </a>
           <span style={{ opacity: 0.4 }}>·</span>
-          <span>SSM 202401037321 (1583168-K)</span>
+          <span>{c.ssm}</span>
         </span>
       </footer>
 
       {/* ============ FLOATING CHAT FAB ============ */}
       <a
-        href="https://wa.me/60133158958?text=Hello%20HM%20Geomatics%2C%20I%20would%20like%20to%20enquire%20about%20your%20surveying%20services."
+        href={whatsappHref}
         target="_blank"
         rel="noopener noreferrer"
         className="chat-fab"

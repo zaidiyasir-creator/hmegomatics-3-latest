@@ -1,30 +1,131 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Header
 from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
-import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
-from typing import List, Optional
-import uuid
-from datetime import datetime, timezone
-
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
-mongo_url = os.environ["MONGO_URL"]
-client = AsyncIOMotorClient(mongo_url)
+import asyncio
+import logging
+import os
+import smtplib
+import time
+import uuid
+from contextlib import asynccontextmanager
+from datetime import datetime, timedelta, timezone
+from email.message import EmailMessage
+from typing import Any, Dict, List, Optional
+
+import bcrypt
+import jwt
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    File,
+    Header,
+    HTTPException,
+    Request,
+    UploadFile,
+)
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from starlette.middleware.cors import CORSMiddleware
+
+
+# ---------------- Logging ----------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger("hm-geomatics")
+
+
+# ---------------- Mongo ----------------
+client = AsyncIOMotorClient(os.environ["MONGO_URL"])
 db = client[os.environ["DB_NAME"]]
 
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "hmgeomatics2026")
 
-app = FastAPI(title="HM Geomatics API")
-api_router = APIRouter(prefix="/api")
+# ---------------- Auth helpers ----------------
+JWT_ALG = "HS256"
+JWT_EXPIRES_HOURS = 24
 
 
-# ---------- Models ----------
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def verify_password(plain: str, hashed: str) -> bool:
+    try:
+        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
+    except Exception:
+        return False
+
+
+def get_jwt_secret() -> str:
+    return os.environ["JWT_SECRET"]
+
+
+def create_access_token(user_id: str, email: str) -> str:
+    payload = {
+        "sub": user_id,
+        "email": email,
+        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRES_HOURS),
+        "iat": datetime.now(timezone.utc),
+        "type": "access",
+    }
+    return jwt.encode(payload, get_jwt_secret(), algorithm=JWT_ALG)
+
+
+async def get_current_user(
+    authorization: Optional[str] = Header(default=None),
+) -> dict:
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        payload = jwt.decode(token, get_jwt_secret(), algorithms=[JWT_ALG])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    if payload.get("type") != "access":
+        raise HTTPException(status_code=401, detail="Invalid token type")
+    user = await db.users.find_one(
+        {"id": payload["sub"]}, {"_id": 0, "password_hash": 0}
+    )
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    return user
+
+
+# ---------------- Brute force (in-memory, simple) ----------------
+_login_attempts: Dict[str, List[float]] = {}
+RATE_WINDOW_SEC = 15 * 60
+RATE_MAX = 5
+
+
+def _rate_check(ip: str) -> None:
+    now = time.time()
+    bucket = [t for t in _login_attempts.get(ip, []) if now - t < RATE_WINDOW_SEC]
+    if len(bucket) >= RATE_MAX:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many failed attempts. Try again in 15 minutes.",
+        )
+    _login_attempts[ip] = bucket
+
+
+def _rate_fail(ip: str) -> None:
+    _login_attempts.setdefault(ip, []).append(time.time())
+
+
+def _rate_reset(ip: str) -> None:
+    _login_attempts.pop(ip, None)
+
+
+# ---------------- Models ----------------
 class EnquiryCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     email: EmailStr
@@ -35,7 +136,6 @@ class EnquiryCreate(BaseModel):
 
 class Enquiry(BaseModel):
     model_config = ConfigDict(extra="ignore")
-
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     email: str
@@ -45,20 +145,300 @@ class Enquiry(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
-class AdminAuth(BaseModel):
+class LoginPayload(BaseModel):
+    email: EmailStr
     password: str
 
 
-# ---------- Helpers ----------
-def require_admin(token: Optional[str]) -> None:
-    if not token or token != ADMIN_PASSWORD:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+class Service(BaseModel):
+    n: str
+    icon: str
+    t: str
+    d: str
 
 
-# ---------- Routes ----------
+class SiteContent(BaseModel):
+    """Single editable document at db.content (key='site')."""
+
+    hero_eyebrow_left: str = "EST · 2024"
+    hero_eyebrow_left_sub: str = "SEREMBAN · 2.7297° N"
+    hero_eyebrow_right: str = "LJT 617"
+    hero_eyebrow_right_sub: str = "101.9381° E"
+    hero_tagline: str = "WORLD DYNAMIC GEOMATIC LEADER · SEREMBAN, MALAYSIA"
+    quote_text: str = (
+        "Hard work and persistence have brought us here. Our strength has "
+        "always been a focus on our people, our teams, and our clients."
+    )
+    quote_attribution_role: str = "Managing Director"
+    quote_attribution_name: str = (
+        "LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan"
+    )
+    quote_attribution_credential: str = "Licensed Land Surveyor"
+    services: List[Service] = Field(default_factory=list)
+    manifesto_eyebrow: str = "Our Promise · MMXXVI"
+    manifesto_words: List[str] = Field(
+        default_factory=lambda: ["Precision.", "Innovation.", "Excellence."]
+    )
+    manifesto_tagline: str = (
+        "Three principles guiding every line, every level, every legal boundary we deliver."
+    )
+    about_intro: str = (
+        "At HM Geomatics Sdn. Bhd., we deliver efficient, accurate, and "
+        "integrated land surveying services. We combine knowledge, hands-on "
+        "experience, and the latest technologies — from single lots to "
+        "multi-level apartments, from private developments to major public "
+        "infrastructure."
+    )
+    values: List[List[str]] = Field(
+        default_factory=lambda: [
+            ["R", "Respect"],
+            ["A", "Accountability"],
+            ["S", "Sustainability"],
+            ["E", "Excellence"],
+            ["C", "Cooperative"],
+            ["C", "Customer-Centricity"],
+        ]
+    )
+    director_name: str = "LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan"
+    director_role: str = "Managing Director · Licensed Land Surveyor"
+    director_bio: str = (
+        "With over a decade of experience in land surveying and geomatics, "
+        "LSr Hazwan leads HM Geomatics with a commitment to precision, "
+        "innovation, and client excellence. Previously serving at Jurukur "
+        "Teras Sdn. Bhd. from 2010–2024, he brings unmatched field "
+        "expertise and professional credentials to every project."
+    )
+    director_photo: str = "/director-hazwan.jpg"
+    director_quals: List[str] = Field(
+        default_factory=lambda: [
+            "Licensed Land Surveyor · Act 458",
+            "FIG/IHO/ICA Category A",
+            "CUUDS-LS 2024",
+            "B.Eng Geomatic (Hons) · UTM 2014",
+            "MAALS Member 2020",
+        ]
+    )
+    address_line1: str = "No. 20, Betaria Business Centre"
+    address_line2: str = "Jalan Durian Emas 3, Off Jalan Dato' Siamang Gagap"
+    address_line3: str = "70100 Seremban, Negeri Sembilan, Malaysia"
+    phone_office: str = "+606 761 0867"
+    phone_director: str = "+6013 315 8958"
+    whatsapp_number: str = "60133158958"
+    ssm: str = "SSM: 202401037321 (1583168-K)"
+    ljt: str = "LJT Reg. No: LJT 617"
+    mof: str = "MOF Cert: J10961822104057517"
+    cert_validity: str = "Valid: 10/01/2025 – 09/01/2028"
+    practice_cert: str = "Practice Name Cert No: 01170"
+    hours: str = (
+        "Monday — Friday · 09:00 – 18:00 MYT · Field visits arranged by appointment"
+    )
+
+
+DEFAULT_SERVICES = [
+    Service(
+        n="01",
+        icon="/icons/land-boundary-survey.svg",
+        t="Land Boundary Survey",
+        d="Accurate demarcation and legal documentation for residential, commercial, and industrial properties.",
+    ),
+    Service(
+        n="02",
+        icon="/icons/topographic-mapping.svg",
+        t="Topographic Mapping",
+        d="High-precision terrain mapping and contour generation for development planning and engineering design.",
+    ),
+    Service(
+        n="03",
+        icon="/icons/geomatic-survey-works.svg",
+        t="Geomatic Survey Works",
+        d="Advanced geospatial data integrating GIS, CAD, and cutting-edge measurement technologies.",
+    ),
+    Service(
+        n="04",
+        icon="/icons/engineering-drawing.svg",
+        t="Engineering Drawing",
+        d="Detailed technical drawings for private developments and public infrastructure projects.",
+    ),
+    Service(
+        n="05",
+        icon="/icons/construction-monitoring.svg",
+        t="Construction Monitoring",
+        d="Ongoing site supervision and progress monitoring for large-scale subdivision developments.",
+    ),
+    Service(
+        n="06",
+        icon="/icons/hydrographic-survey.svg",
+        t="Hydrographic Survey",
+        d="FIG/IHO/ICA Category A certified hydrographic surveys for maritime and coastal applications.",
+    ),
+]
+
+
+class ProjectCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    category: Optional[str] = Field(default=None, max_length=120)
+    location: Optional[str] = Field(default=None, max_length=160)
+    year: Optional[str] = Field(default=None, max_length=20)
+    description: Optional[str] = Field(default=None, max_length=2000)
+    image: Optional[str] = None
+    order: Optional[int] = 0
+
+
+class Project(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    category: Optional[str] = None
+    location: Optional[str] = None
+    year: Optional[str] = None
+    description: Optional[str] = None
+    image: Optional[str] = None
+    order: int = 0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+# ---------------- Email ----------------
+def _send_email_sync(subject: str, body: str) -> None:
+    host = os.environ.get("SMTP_HOST", "").strip()
+    user = os.environ.get("SMTP_USER", "").strip()
+    pwd = os.environ.get("SMTP_PASSWORD", "").strip()
+    sender = os.environ.get("SMTP_FROM", "").strip() or user
+    recipient = os.environ.get("EMAIL_TO", "").strip()
+    port = int(os.environ.get("SMTP_PORT", "587") or 587)
+
+    if not host or not user or not pwd or not sender or not recipient:
+        logger.info("SMTP not configured — skipping email notification")
+        return
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = recipient
+    msg.set_content(body)
+
+    try:
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=10) as s:
+                s.login(user, pwd)
+                s.send_message(msg)
+        else:
+            with smtplib.SMTP(host, port, timeout=10) as s:
+                s.starttls()
+                s.login(user, pwd)
+                s.send_message(msg)
+        logger.info("Enquiry email sent to %s", recipient)
+    except Exception as exc:
+        logger.warning("Failed to send enquiry email: %s", exc)
+
+
+async def send_enquiry_email(enq: Enquiry) -> None:
+    subject = f"[HM Geomatics] New enquiry — {enq.subject or 'No subject'}"
+    body = (
+        f"New enquiry received via the HM Geomatics website.\n\n"
+        f"Name:    {enq.name}\n"
+        f"Email:   {enq.email}\n"
+        f"Phone:   {enq.phone or '—'}\n"
+        f"Subject: {enq.subject or '—'}\n"
+        f"When:    {enq.created_at.isoformat()}\n\n"
+        f"Message:\n{enq.message}\n\n"
+        f"— HM Geomatics website"
+    )
+    await asyncio.to_thread(_send_email_sync, subject, body)
+
+
+# ---------------- Seeding ----------------
+async def seed_admin() -> None:
+    email = os.environ["ADMIN_EMAIL"].lower().strip()
+    password = os.environ["ADMIN_PASSWORD"]
+    existing = await db.users.find_one({"email": email})
+    if existing is None:
+        await db.users.insert_one(
+            {
+                "id": str(uuid.uuid4()),
+                "email": email,
+                "password_hash": hash_password(password),
+                "name": "Admin",
+                "role": "admin",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+        )
+        logger.info("Seeded admin user %s", email)
+    elif not verify_password(password, existing["password_hash"]):
+        await db.users.update_one(
+            {"email": email},
+            {"$set": {"password_hash": hash_password(password)}},
+        )
+        logger.info("Updated admin password hash for %s", email)
+
+
+async def seed_content() -> None:
+    existing = await db.content.find_one({"key": "site"})
+    if existing is None:
+        doc = SiteContent(services=DEFAULT_SERVICES).model_dump()
+        doc["key"] = "site"
+        await db.content.insert_one(doc)
+        logger.info("Seeded default site content")
+
+
+async def ensure_indexes() -> None:
+    await db.users.create_index("email", unique=True)
+    await db.enquiries.create_index([("created_at", -1)])
+    await db.projects.create_index([("order", 1), ("created_at", -1)])
+    await db.content.create_index("key", unique=True)
+
+
+# ---------------- Lifespan ----------------
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        await ensure_indexes()
+        await seed_admin()
+        await seed_content()
+    except Exception as exc:
+        logger.error("Startup error: %s", exc)
+    yield
+    client.close()
+
+
+app = FastAPI(title="HM Geomatics API", lifespan=lifespan)
+
+# Serve uploaded images
+UPLOAD_DIR = ROOT_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
+api_router = APIRouter(prefix="/api")
+
+
+# ---------------- Public routes ----------------
 @api_router.get("/")
 async def root():
     return {"service": "HM Geomatics", "status": "ok"}
+
+
+@api_router.get("/content")
+async def get_content() -> dict:
+    doc = await db.content.find_one({"key": "site"}, {"_id": 0, "key": 0})
+    if not doc:
+        # Should not happen because seed_content runs at startup
+        return SiteContent(services=DEFAULT_SERVICES).model_dump()
+    return doc
+
+
+@api_router.get("/projects", response_model=List[Project])
+async def list_projects_public() -> List[dict]:
+    docs = (
+        await db.projects.find({}, {"_id": 0})
+        .sort([("order", 1), ("created_at", -1)])
+        .to_list(200)
+    )
+    for d in docs:
+        if isinstance(d.get("created_at"), str):
+            try:
+                d["created_at"] = datetime.fromisoformat(d["created_at"])
+            except ValueError:
+                d["created_at"] = datetime.now(timezone.utc)
+    return docs
 
 
 @api_router.post("/enquiries", response_model=Enquiry)
@@ -73,19 +453,66 @@ async def create_enquiry(payload: EnquiryCreate):
     doc = obj.model_dump()
     doc["created_at"] = doc["created_at"].isoformat()
     await db.enquiries.insert_one(doc)
+    # Fire-and-forget email
+    asyncio.create_task(send_enquiry_email(obj))
     return obj
 
 
+# ---------------- Auth routes ----------------
+@api_router.post("/auth/login")
+async def auth_login(payload: LoginPayload, request: Request):
+    ip = request.client.host if request.client else "unknown"
+    _rate_check(ip)
+
+    email = payload.email.lower().strip()
+    user = await db.users.find_one({"email": email})
+    if not user or not verify_password(payload.password, user["password_hash"]):
+        _rate_fail(ip)
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    _rate_reset(ip)
+    token = create_access_token(user["id"], user["email"])
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user["id"],
+            "email": user["email"],
+            "name": user.get("name", "Admin"),
+            "role": user.get("role", "admin"),
+        },
+    }
+
+
+@api_router.get("/auth/me")
+async def auth_me(user: dict = Depends(get_current_user)):
+    return user
+
+
+# ---------------- Backward-compat shim (old /api/admin/login) ----------------
+class LegacyAdminAuth(BaseModel):
+    password: str
+
+
 @api_router.post("/admin/login")
-async def admin_login(payload: AdminAuth):
-    if payload.password != ADMIN_PASSWORD:
+async def legacy_admin_login(payload: LegacyAdminAuth, request: Request):
+    """Legacy endpoint kept for any cached clients. Issues a JWT for the
+    seeded admin if the password matches ADMIN_PASSWORD."""
+    ip = request.client.host if request.client else "unknown"
+    _rate_check(ip)
+    admin_email = os.environ["ADMIN_EMAIL"].lower().strip()
+    user = await db.users.find_one({"email": admin_email})
+    if not user or not verify_password(payload.password, user["password_hash"]):
+        _rate_fail(ip)
         raise HTTPException(status_code=401, detail="Invalid password")
-    return {"token": ADMIN_PASSWORD, "ok": True}
+    _rate_reset(ip)
+    token = create_access_token(user["id"], user["email"])
+    return {"token": token, "access_token": token, "ok": True}
 
 
+# ---------------- Admin · Enquiries ----------------
 @api_router.get("/admin/enquiries", response_model=List[Enquiry])
-async def list_enquiries(x_admin_token: Optional[str] = Header(default=None)):
-    require_admin(x_admin_token)
+async def list_enquiries(user: dict = Depends(get_current_user)):
     docs = (
         await db.enquiries.find({}, {"_id": 0})
         .sort("created_at", -1)
@@ -102,15 +529,100 @@ async def list_enquiries(x_admin_token: Optional[str] = Header(default=None)):
 
 @api_router.delete("/admin/enquiries/{enquiry_id}")
 async def delete_enquiry(
-    enquiry_id: str, x_admin_token: Optional[str] = Header(default=None)
+    enquiry_id: str, user: dict = Depends(get_current_user)
 ):
-    require_admin(x_admin_token)
     res = await db.enquiries.delete_one({"id": enquiry_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return {"deleted": enquiry_id}
 
 
+# ---------------- Admin · Content ----------------
+@api_router.put("/admin/content")
+async def update_content(
+    payload: SiteContent, user: dict = Depends(get_current_user)
+):
+    doc = payload.model_dump()
+    doc["updated_at"] = datetime.now(timezone.utc).isoformat()
+    await db.content.update_one(
+        {"key": "site"}, {"$set": doc}, upsert=True
+    )
+    return {"ok": True}
+
+
+# ---------------- Admin · Projects ----------------
+@api_router.get("/admin/projects", response_model=List[Project])
+async def list_projects_admin(user: dict = Depends(get_current_user)):
+    return await list_projects_public()
+
+
+@api_router.post("/admin/projects", response_model=Project)
+async def create_project(
+    payload: ProjectCreate, user: dict = Depends(get_current_user)
+):
+    obj = Project(**payload.model_dump())
+    doc = obj.model_dump()
+    doc["created_at"] = doc["created_at"].isoformat()
+    await db.projects.insert_one(doc)
+    return obj
+
+
+@api_router.put("/admin/projects/{project_id}", response_model=Project)
+async def update_project(
+    project_id: str,
+    payload: ProjectCreate,
+    user: dict = Depends(get_current_user),
+):
+    existing = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Project not found")
+    updates = payload.model_dump()
+    await db.projects.update_one({"id": project_id}, {"$set": updates})
+    merged = {**existing, **updates}
+    if isinstance(merged.get("created_at"), str):
+        try:
+            merged["created_at"] = datetime.fromisoformat(merged["created_at"])
+        except ValueError:
+            merged["created_at"] = datetime.now(timezone.utc)
+    return Project(**merged)
+
+
+@api_router.delete("/admin/projects/{project_id}")
+async def delete_project(
+    project_id: str, user: dict = Depends(get_current_user)
+):
+    res = await db.projects.delete_one({"id": project_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"deleted": project_id}
+
+
+# ---------------- Admin · Upload ----------------
+ALLOWED_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
+MAX_UPLOAD_BYTES = 8 * 1024 * 1024  # 8 MB
+
+
+@api_router.post("/admin/upload")
+async def upload_image(
+    file: UploadFile = File(...), user: dict = Depends(get_current_user)
+):
+    ext = Path(file.filename or "").suffix.lower()
+    if ext not in ALLOWED_EXTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type. Allowed: {sorted(ALLOWED_EXTS)}",
+        )
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=413, detail="File too large (max 8 MB)")
+
+    name = f"{uuid.uuid4().hex}{ext}"
+    out = UPLOAD_DIR / name
+    out.write_bytes(data)
+    return {"url": f"/api/uploads/{name}", "filename": name, "bytes": len(data)}
+
+
+# ---------------- Router & Middleware ----------------
 app.include_router(api_router)
 
 app.add_middleware(
@@ -120,14 +632,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
