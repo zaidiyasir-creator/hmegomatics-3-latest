@@ -2,87 +2,114 @@
 
 ## Original Problem Statement
 Build a luxury prestige website for HM Geomatics Sdn. Bhd. (Malaysian licensed
-land surveyor) inspired by rolex.com — a dark hero with a slowly rotating 3D
-HM medallion centrepiece, followed by alternating cream / white content
-sections (quote band, services 3×2 grid, about split panel, director profile,
-contact, footer). Includes a hidden `/admin` page to view enquiries submitted
-through the SEND ENQUIRY form.
+land surveyor) inspired by rolex.com — a dark dramatic hero centrepiece,
+followed by alternating cream / white content sections (quote band, services
+3×2 grid, about split panel, director profile, contact, footer). Includes a
+hidden `/admin` page to view and manage enquiries plus a full CMS.
 
 ## Architecture
-- **Frontend**: React 19 + react-router-dom 7, Three.js r160 for the medallion,
-  Sonner for toasts, Tailwind + custom CSS (`styles/site.css`).
-- **Backend**: FastAPI + Motor (MongoDB). All routes under `/api`. Admin auth
-  is a single shared password from env (`ADMIN_PASSWORD`), checked via
-  `x-admin-token` header.
-- **Data**: MongoDB collection `enquiries` (`id`, `name`, `email`, `phone?`,
-  `subject?`, `message`, `created_at` ISO).
+- **Frontend**: React 19 + react-router-dom 7, Sonner for toasts, custom
+  hand-crafted CSS (`styles/site.css`). HeroVideo plays a looping
+  `hmgeo-emergence.webm/.mp4`.
+- **Backend**: FastAPI + Motor (MongoDB). All routes under `/api`. JWT
+  (HS256, 24h) + bcrypt-hashed admin password. Lifespan context manager
+  for startup (seeds admin + content, ensures indexes). SMTP enquiry
+  notifications via env vars (gracefully no-ops if unset).
+- **Data**:
+  - `users` — single admin, seeded from env (email + bcrypt hash + role)
+  - `content` — single doc keyed `"site"` with all editable site copy
+  - `projects` — list of "Selected Work" items
+  - `enquiries` — contact-form submissions
 
 ## User Personas
-- **Prospective client** (developers, contractors, gov agencies in Malaysia)
-  — visits the site, reviews services / credentials, submits an enquiry.
-- **HM Geomatics admin** (Director / office) — signs into `/admin`, reviews
-  and deletes enquiries.
+- **Prospective client** (developers, contractors, gov agencies) —
+  visits the site, reviews services / credentials / projects, submits an
+  enquiry.
+- **HM Geomatics admin** (Director / office) — signs into `/admin`,
+  reviews enquiries, edits site content, manages projects.
 
 ## Core Requirements (static)
-1. Dark hero with a 3D rotating medallion (HM monogram).
-2. Alternating cream / white content sections after the hero.
+1. Dark hero with a looping HM monogram emergence video.
+2. Alternating cream / dark content sections after the hero.
 3. Six services grid, director profile, company credentials, address.
-4. Working "Send Enquiry" form persisting to MongoDB.
-5. Admin page at `/admin` with password gate to view/delete enquiries.
+4. Working "Send Enquiry" form persisting to MongoDB + email alert.
+5. Admin page at `/admin` with JWT login and tabbed CMS:
+   - Enquiries (view + delete)
+   - Site Content (all 32+ fields editable, including services list,
+     manifesto words, values, director bio + photo upload, contact info)
+   - Projects (CRUD with image upload)
 6. Gold accent `#C9932A`, Cormorant Garamond + Montserrat typography.
 
-## What's Been Implemented (2026-05-20)
-- 3D medallion (Three.js, slow majestic z-spin + y-wobble + y-float, gold
-  rim torus, inner accent ring, dark cylinder body, CircleGeometry face
-  textured with a hand-drawn canvas HM monogram).
-- Sticky transparent → dark nav with rotating HM logo on hover.
-- Hero overlay (eyebrow, title, divider, scroll cue, coordinate ticks).
-- Cream quote band with director attribution.
-- White services grid (6 cells, 0.5px borders, hover lighten).
-- Cream/dark about split panel with stats + values.
-- White director profile with avatar, role, quals.
-- Cream contact section with full enquiry form posting to `/api/enquiries`.
-- Dark footer with company reg.
-- `/admin`: login form → dashboard with table (received, name, contact,
-  subject, message, delete) + refresh / sign out.
-- Backend: `GET /api/`, `POST /api/enquiries`, `POST /api/admin/login`,
-  `GET /api/admin/enquiries`, `DELETE /api/admin/enquiries/{id}`.
-- Test credentials stored in `/app/memory/test_credentials.md`.
-- Full test pass (100% backend, 100% frontend) — `iteration_1.json`.
+## What's Been Implemented
 
-## What's Been Implemented (2026-05-20 — session 2)
-- Replaced Three.js medallion with looping hero video
-  (`hmgeo-emergence.webm` + `.mp4`) handled by `HeroVideo.jsx`
-  (renamed from legacy `Hero3D.jsx`).
-- Responsive fluid typography via `clamp()` across all breakpoints.
-- Manifesto section with scroll-in reveal animation.
-- Custom CSS `mask-image` line-art icons in services grid.
-- Director portrait (`director-hazwan.jpg`) embedded in Leadership.
-- Floating "Chat to the Team" WhatsApp FAB (bottom-right, lifted to
-  `86px` to clear platform badges).
-- Company profile PDF download in nav.
-- **SEO**: meta tags, Open Graph, Twitter card, JSON-LD
-  `ProfessionalService` schema in `index.html`; `sitemap.xml` and
-  `robots.txt` served (verified HTTP 200). Cloudflare layer prepends
-  managed AI-bot policy automatically.
-- **PDF compression**: `hm-geomatics-2026-profile.pdf` reduced from
-  **43.2 MB → 4.3 MB** (90% smaller, 29 pages preserved) via Ghostscript
-  `/ebook` preset. Original kept as `.original.pdf` backup.
-- Removed legacy `Hero3D.jsx`; cleaned stray `}` parse error in
-  `Home.jsx`.
+### 2026-05-20 (initial)
+- Three.js medallion hero (later replaced with video).
+- Sticky transparent → dark nav, services grid, director profile, contact.
+- Shared-password admin login + enquiry table.
+- 100% backend + frontend test pass (`iteration_1.json`).
+
+### 2026-05-20 (session 2 — content polish)
+- Replaced Three.js with looping hero video (`HeroVideo.jsx`).
+- Responsive fluid typography (`clamp()`).
+- Manifesto reveal animation.
+- Custom CSS mask-image line-art service icons.
+- Director portrait, WhatsApp FAB, Co. Profile PDF download.
+- SEO: meta tags, `sitemap.xml`, `robots.txt`, JSON-LD `ProfessionalService`.
+- PDF compression: 43.2 MB → 4.3 MB via Ghostscript (29 pages preserved).
+- Renamed legacy `Hero3D.jsx` → `HeroVideo.jsx`.
+
+### 2026-05-21 (session 3 — P1 + P3 + CMS)
+- **Auth hardening (P3)**:
+  - JWT (HS256, 24h) + bcrypt (cost 12) password hashing
+  - `POST /api/auth/login` (email + password)
+  - `GET /api/auth/me` (Bearer token)
+  - In-memory per-IP brute-force lockout (5 attempts / 15 min → HTTP 429)
+  - Backward-compat `/api/admin/login` shim that issues a JWT
+- **FastAPI lifespan migration (P3)** — replaced deprecated `@app.on_event`
+  with `@asynccontextmanager` lifespan that seeds admin (idempotent),
+  seeds default site content, and ensures MongoDB indexes.
+- **Email notifications (P1)** — `smtplib` via env (`SMTP_HOST/PORT/USER/
+  PASSWORD/FROM`, `EMAIL_TO`). Fire-and-forget on `POST /api/enquiries`.
+  Gracefully logs and no-ops when credentials missing.
+- **Full CMS (new)**:
+  - Public `GET /api/content` + admin `PUT /api/admin/content`
+  - 32+ editable fields covering hero, quote, services, manifesto, about,
+    values, director (with photo upload), contact, company registration
+  - Public `GET /api/projects` + admin CRUD at `/api/admin/projects`
+  - `POST /api/admin/upload` — multipart file (8 MB cap, image-only)
+    served via mounted `/api/uploads/*` StaticFiles
+- **Public "Selected Work" section** — auto-renders on Home between
+  Services and Manifesto when projects exist.
+- **Home.jsx hydration** — fetches `/api/content` + `/api/projects` on
+  mount with hardcoded fallback if API is offline.
+- **Admin.jsx rewrite** — 3-tab dashboard (Enquiries / Site Content /
+  Projects) with image upload component, sticky save bar, inline list
+  editors for services / quals / manifesto words / values.
+
+## Test Status
+- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
+  zero bugs.
 
 ## Prioritised Backlog
+
 ### P1
-- Mobile QA pass on iOS Safari (Three.js memory footprint).
-- Email notification when an enquiry is submitted (Resend/SendGrid).
+- Wire actual SMTP creds (or switch to Resend) so enquiry emails fire.
+- Mobile QA pass on iOS Safari.
 
 ### P2
-- Projects / case-studies section (mirrors rolex "selected work").
+- Production hardening:
+  - Swap canonical URLs in `sitemap.xml`, `robots.txt`, `index.html`
+    from preview domain → live `hmgeomatics.com.my`.
+  - Set explicit CORS origin instead of `*`.
+  - Rotate `JWT_SECRET` for production.
 - Multilingual (Bahasa Malaysia toggle).
 - Map embed for Seremban office.
 - Admin: CSV export of enquiries.
+- CMS: drag-and-drop reorder of services / projects.
+- CMS: rich text editor for director bio / about intro.
 
 ### P3
-- Auth hardening (replace shared password with JWT + bcrypt).
-- Migrate FastAPI `@app.on_event` to lifespan handler.
-- Lottie/WebGL background grain on cream sections.
+- Brute force protection → Redis-backed if scaling horizontally.
+- Multi-user CMS (invite editors).
+- Project detail pages with image gallery + map.
+- Webhook on new enquiry → Slack / Telegram.
