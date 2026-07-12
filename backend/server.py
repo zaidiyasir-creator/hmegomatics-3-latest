@@ -468,6 +468,41 @@ async def seed_content() -> None:
         doc["key"] = "site"
         await db.content.insert_one(doc)
         logger.info("Seeded default site content")
+        return
+
+    # ---- Migration: upgrade stale content docs to the latest schema ----
+    # This preserves the user's edited copy while ensuring new fields exist.
+    updates: Dict[str, Any] = {}
+
+    # 1) Services: if list is short, or ANY service is missing new fields
+    #    (slug / photo / long_description), replace with DEFAULT_SERVICES.
+    services = existing.get("services") or []
+    default_slugs = {s.slug for s in DEFAULT_SERVICES}
+    needs_service_upgrade = (
+        len(services) < len(DEFAULT_SERVICES)
+        or any(
+            not s.get("slug") or not s.get("photo") or "long_description" not in s
+            for s in services
+        )
+        or not {s.get("slug", "") for s in services}.issuperset(default_slugs)
+    )
+    if needs_service_upgrade:
+        updates["services"] = [s.model_dump() for s in DEFAULT_SERVICES]
+
+    # 2) Ensure new top-level field(s) exist (email, etc.)
+    defaults = SiteContent().model_dump()
+    for key, default_value in defaults.items():
+        if key == "services":
+            continue
+        if key not in existing:
+            updates[key] = default_value
+
+    if updates:
+        updates["migrated_at"] = datetime.now(timezone.utc).isoformat()
+        await db.content.update_one({"key": "site"}, {"$set": updates})
+        logger.info(
+            "Migrated site content — updated keys: %s", ", ".join(updates.keys())
+        )
 
 
 async def ensure_indexes() -> None:
@@ -648,6 +683,23 @@ async def update_content(
         {"key": "site"}, {"$set": doc}, upsert=True
     )
     return {"ok": True}
+
+
+@api_router.post("/admin/content/reset-services")
+async def reset_services_to_defaults(user: dict = Depends(get_current_user)):
+    """Force-reset the services array to DEFAULT_SERVICES.
+    Useful when upgrading a stale production DB. Preserves all other fields."""
+    await db.content.update_one(
+        {"key": "site"},
+        {
+            "$set": {
+                "services": [s.model_dump() for s in DEFAULT_SERVICES],
+                "reset_at": datetime.now(timezone.utc).isoformat(),
+            }
+        },
+        upsert=True,
+    )
+    return {"ok": True, "services": len(DEFAULT_SERVICES)}
 
 
 # ---------------- Admin · Projects ----------------
