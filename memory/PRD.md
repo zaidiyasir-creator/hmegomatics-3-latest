@@ -85,8 +85,7 @@ hidden `/admin` page to view and manage enquiries plus a full CMS.
   Projects) with image upload component, sticky save bar, inline list
   editors for services / quals / manifesto words / values.
 
-### 2026-05-21 (session 4 — Services v2 + polish)
-- **Hero sound toggle** — "Sound Off / Sound On" pill, bottom-left of
+### 2026-05-21 (session 4 — Services v2 + polish)- **Hero sound toggle** — "Sound Off / Sound On" pill, bottom-left of
   hero. Video swapped to `emergencehme.mp4` (with AAC audio); .webm
   re-encoded with opus. Starts muted (autoplay compliance).
 - **Chat FAB → icon-only** — clean 56×56 gold circle with WhatsApp
@@ -116,7 +115,38 @@ hidden `/admin` page to view and manage enquiries plus a full CMS.
     text**, **lucide icon key** fields (upload button for local
     hosting also included).
 
-## Test Status- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
+## Test Status
+- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
+  zero bugs.
+- `iteration_3.json` — **100% backend (16/16 new + 19/19 regression)**,
+  **100% frontend flows verified**, zero bugs.
+
+## Session 5 (2026-07-12) — Service Detail Pages + Email
+- **Email**: `EMAIL_TO` already `hazwan@hmgeomatics.com` (enquiry alerts).
+  Added visible **Email** row to the Home contact section with
+  `mailto:` link. New editable `email` field on `SiteContent` and CMS.
+- **`/services/<slug>` dedicated pages** — new `ServiceDetail.jsx`:
+  - Full-bleed hero (branded HD photo + gradient) with back button,
+    eyebrow, H1, gold bar, lede.
+  - Overview section with `long_description`.
+  - 3-col grid: **Equipment / Deliverables / Standards** (rich data
+    per service — 4 items / 4 items / 3 items each).
+  - Dark **"Discuss this service"** CTA with mailto + phones + inline
+    enquiry form (subject pre-filled with service name).
+  - Related services (3 cards, cross-linked).
+  - JSON-LD `Service` schema per page.
+- **Backend Service model** extended with `slug`, `long_description`,
+  `equipment[]`, `deliverables[]`, `standards[]`. New public endpoint
+  `GET /api/services/{slug}` (404 for unknown).
+- **CMS Content tab** editors for all 5 new service fields (equipment
+  / deliverables / standards as textareas — one entry per line).
+- **Home service cards** now use `<Link to="/services/<slug>">` instead
+  of scroll-to-contact.
+- **`sitemap.xml` updated** with all 9 service page URLs.
+- **UX polish**: `ServiceDetail` clears state on `slug` change to
+  prevent stale H1 flash during related-card navigation.
+
+## Test Status (superseded)- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
   zero bugs.
 
 ## Prioritised Backlog

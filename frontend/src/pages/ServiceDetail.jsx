@@ -101,6 +101,9 @@ export default function ServiceDetail() {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    setService(null);
+    setContent(null);
+    setNotFound(false);
     (async () => {
       try {
         const [svcRes, contentRes] = await Promise.all([
