@@ -3,9 +3,44 @@ import axios from "axios";
 import { toast } from "sonner";
 import Nav from "@/components/Nav";
 import HeroVideo from "@/components/HeroVideo";
+import {
+  Frame,
+  Map,
+  Building2,
+  Layers,
+  Ship,
+  ScanLine,
+  Radar,
+  Mountain,
+  Plane,
+  Construction,
+  Satellite,
+  Ruler,
+  Activity,
+  Database,
+  ArrowUpRight,
+} from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BACKEND = process.env.REACT_APP_BACKEND_URL;
+
+/* Lucide icon lookup by service key */
+const ICONS = {
+  boundary: Frame,
+  map: Map,
+  building: Building2,
+  layers: Layers,
+  ship: Ship,
+  scan: ScanLine,
+  radar: Radar,
+  mountain: Mountain,
+  drone: Plane,
+  construction: Construction,
+  satellite: Satellite,
+  ruler: Ruler,
+  activity: Activity,
+  database: Database,
+};
 
 /* Fallback content used if /api/content fails — keeps the site readable. */
 const FALLBACK = {
@@ -20,12 +55,7 @@ const FALLBACK = {
   quote_attribution_name: "LSr Muhammad Hazwan bin Dato' LSr Mohd Mazlan",
   quote_attribution_credential: "Licensed Land Surveyor",
   services: [
-    { n: "01", icon: "/icons/land-boundary-survey.svg", t: "Land Boundary Survey", d: "Accurate demarcation and legal documentation." },
-    { n: "02", icon: "/icons/topographic-mapping.svg", t: "Topographic Mapping", d: "High-precision terrain mapping." },
-    { n: "03", icon: "/icons/geomatic-survey-works.svg", t: "Geomatic Survey Works", d: "GIS, CAD, and measurement tech." },
-    { n: "04", icon: "/icons/engineering-drawing.svg", t: "Engineering Drawing", d: "Technical drawings for projects." },
-    { n: "05", icon: "/icons/construction-monitoring.svg", t: "Construction Monitoring", d: "Ongoing site supervision." },
-    { n: "06", icon: "/icons/hydrographic-survey.svg", t: "Hydrographic Survey", d: "FIG/IHO/ICA Category A certified." },
+    { n: "01", key: "boundary", t: "Land Boundary Survey", d: "Accurate determination of legal land boundaries.", photo: "", alt: "" },
   ],
   manifesto_eyebrow: "Our Promise · MMXXVI",
   manifesto_words: ["Precision.", "Innovation.", "Excellence."],
@@ -220,11 +250,11 @@ export default function Home() {
       </section>
 
       {/* ============ SERVICES ============ */}
-      <section id="services" className="services" data-testid="services-section">
-        <div className="services-head reveal">
+      <section id="services" className="services-v2" data-testid="services-section">
+        <div className="services-v2-head reveal">
           <div>
-            <div className="eyebrow">
-              Our Expertise · {c.services?.[0]?.n || "01"} — {c.services?.[c.services.length - 1]?.n || "06"}
+            <div className="eyebrow" style={{ color: "var(--gold)" }}>
+              Our Expertise · {c.services?.length || 14} Disciplines
             </div>
             <h2 className="section-heading large" style={{ marginTop: 18 }}>
               Precision at <span className="italic">every scale</span>.
@@ -232,27 +262,98 @@ export default function Home() {
             <span className="gold-bar" />
           </div>
           <p>
-            {c.services?.length || 6} disciplines, one licensed practice. From single lots to multi-level apartments, from private developments to public infrastructure.
+            From single lots to nationwide infrastructure — a fully licensed
+            practice covering every discipline of modern land, marine and
+            aerial surveying.
           </p>
         </div>
 
-        <div className="services-grid">
-          {(c.services || []).map((s) => (
-            <article key={s.n + s.t} className="service-cell reveal" data-testid={`service-${s.n}`}>
-              <div className="service-head">
-                <span className="num">{s.n}</span>
-                <span
-                  className="service-icon"
-                  style={{ WebkitMaskImage: `url(${s.icon})`, maskImage: `url(${s.icon})` }}
-                  aria-hidden="true"
-                />
-              </div>
-              <h3>{s.t}</h3>
-              <p>{s.d}</p>
-            </article>
-          ))}
+        <div className="services-v2-grid">
+          {(c.services || []).map((s) => {
+            const Icon = ICONS[s.key] || Frame;
+            const slug = (s.t || "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)/g, "");
+            const learnMoreHref = `#contact?service=${encodeURIComponent(s.t)}`;
+            return (
+              <article
+                key={s.n + s.t}
+                className="svc-card reveal"
+                data-testid={`service-${s.n}`}
+                data-service-slug={slug}
+              >
+                <a
+                  href={learnMoreHref}
+                  className="svc-card-inner"
+                  aria-label={`${s.t} — Learn more`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById("contact");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    // Prefill subject in the enquiry form
+                    setTimeout(() => {
+                      const subj = document.querySelector('[data-testid="enquiry-subject"]');
+                      if (subj) {
+                        subj.value = s.t;
+                        subj.dispatchEvent(new Event("input", { bubbles: true }));
+                      }
+                    }, 500);
+                  }}
+                >
+                  <div className="svc-card-image">
+                    {s.photo && (
+                      <img
+                        src={s.photo}
+                        alt={s.alt || s.t}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+                    <div className="svc-card-gradient" aria-hidden="true" />
+                    <span className="svc-card-num" aria-hidden="true">{s.n}</span>
+                  </div>
+                  <div className="svc-card-body">
+                    <div className="svc-card-icon" aria-hidden="true">
+                      <Icon size={22} strokeWidth={1.4} />
+                    </div>
+                    <h3>{s.t}</h3>
+                    <span className="svc-accent" aria-hidden="true" />
+                    <p>{s.d}</p>
+                    <span className="svc-learn">
+                      Learn More <ArrowUpRight size={14} strokeWidth={1.6} />
+                    </span>
+                  </div>
+                </a>
+              </article>
+            );
+          })}
         </div>
-        <div className="services-foot" />
+
+        {/* JSON-LD schema.org Service list */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ItemList",
+              itemListElement: (c.services || []).map((s, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                item: {
+                  "@type": "Service",
+                  name: s.t,
+                  description: s.d,
+                  image: s.photo,
+                  provider: {
+                    "@type": "ProfessionalService",
+                    name: "HM Geomatics Sdn. Bhd.",
+                  },
+                },
+              })),
+            }),
+          }}
+        />
       </section>
 
       {/* ============ SELECTED WORK ============ */}

@@ -152,9 +152,12 @@ class LoginPayload(BaseModel):
 
 class Service(BaseModel):
     n: str
-    icon: str
+    icon: str = ""  # legacy path to /icons/*.svg (kept for backward compat, unused in new grid)
     t: str
     d: str
+    photo: str = ""
+    alt: str = ""
+    key: str = ""  # lucide icon key: boundary|map|building|layers|ship|radar|drone|mountain|satellite|database|construction|utility|scan|activity
 
 
 class SiteContent(BaseModel):
@@ -237,39 +240,115 @@ class SiteContent(BaseModel):
 DEFAULT_SERVICES = [
     Service(
         n="01",
-        icon="/icons/land-boundary-survey.svg",
+        key="boundary",
         t="Land Boundary Survey",
-        d="Accurate demarcation and legal documentation for residential, commercial, and industrial properties.",
+        d="Accurate determination of legal land boundaries for subdivision, title, transfer and development projects.",
+        photo="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Licensed surveyor using a total station on a land boundary",
     ),
     Service(
         n="02",
-        icon="/icons/topographic-mapping.svg",
-        t="Topographic Mapping",
-        d="High-precision terrain mapping and contour generation for development planning and engineering design.",
+        key="map",
+        t="Topographic Survey & Mapping",
+        d="Detailed mapping of natural and man-made features for planning, engineering design and construction.",
+        photo="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Aerial terrain with contour mapping",
     ),
     Service(
         n="03",
-        icon="/icons/geomatic-survey-works.svg",
-        t="Geomatic Survey Works",
-        d="Advanced geospatial data integrating GIS, CAD, and cutting-edge measurement technologies.",
+        key="building",
+        t="Engineering Survey",
+        d="Precision setting out, alignment and control surveys for roads, bridges, buildings and infrastructure projects.",
+        photo="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Surveyor setting out at a building construction site",
     ),
     Service(
         n="04",
-        icon="/icons/engineering-drawing.svg",
-        t="Engineering Drawing",
-        d="Detailed technical drawings for private developments and public infrastructure projects.",
+        key="layers",
+        t="Title / Cadastral Survey",
+        d="Boundary verification and documentation supporting land title, subdivision and property registration.",
+        photo="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Cadastral plans and lot boundary documents",
     ),
     Service(
         n="05",
-        icon="/icons/construction-monitoring.svg",
-        t="Construction Monitoring",
-        d="Ongoing site supervision and progress monitoring for large-scale subdivision developments.",
+        key="ship",
+        t="Hydrographic Survey",
+        d="Bathymetric and underwater surveys for rivers, ports, coastal developments and marine engineering.",
+        photo="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Hydrographic survey vessel on open water",
     ),
     Service(
         n="06",
-        icon="/icons/hydrographic-survey.svg",
-        t="Hydrographic Survey",
-        d="FIG/IHO/ICA Category A certified hydrographic surveys for maritime and coastal applications.",
+        key="scan",
+        t="LiDAR Survey",
+        d="High-resolution laser scanning for accurate terrain, asset and infrastructure mapping.",
+        photo="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="3D LiDAR point cloud visualisation",
+    ),
+    Service(
+        n="07",
+        key="radar",
+        t="Underground Utility Detection & Mapping",
+        d="Locate underground utilities accurately to minimise construction risk and prevent accidental damage.",
+        photo="https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Surveyor operating a ground penetrating radar (GPR) unit",
+    ),
+    Service(
+        n="08",
+        key="mountain",
+        t="Mining Survey",
+        d="Survey solutions for mining operations including volume calculations, monitoring and compliance.",
+        photo="https://images.unsplash.com/photo-1610555356070-d0efb6505f81?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Open pit mine with survey equipment",
+    ),
+    Service(
+        n="09",
+        key="drone",
+        t="Drone Survey (UAV)",
+        d="Aerial photogrammetry and mapping for fast, safe and cost-effective geospatial data acquisition.",
+        photo="https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Professional mapping drone flying over a development site",
+    ),
+    Service(
+        n="10",
+        key="construction",
+        t="Construction Monitoring",
+        d="Continuous monitoring of structural movement, settlement and deformation throughout construction.",
+        photo="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Surveyor monitoring a high-rise construction site",
+    ),
+    Service(
+        n="11",
+        key="satellite",
+        t="GNSS / GPS Survey",
+        d="High-accuracy satellite positioning for engineering, cadastral and infrastructure surveys.",
+        photo="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Surveyor using a GNSS receiver in the field",
+    ),
+    Service(
+        n="12",
+        key="ruler",
+        t="As-Built Survey",
+        d="Accurate documentation of completed structures for engineering records and facility management.",
+        photo="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Surveyor measuring a completed building facade",
+    ),
+    Service(
+        n="13",
+        key="activity",
+        t="Deformation Monitoring",
+        d="Precise monitoring of movement and displacement for structures, slopes and infrastructure assets.",
+        photo="https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="Long-span bridge with monitoring instrumentation",
+    ),
+    Service(
+        n="14",
+        key="database",
+        t="GIS & Spatial Data Solutions",
+        d="Integrated spatial data management, GIS analysis and mapping solutions for informed decision-making.",
+        photo="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&h=900&q=80",
+        alt="GIS mapping visualised on multiple computer screens",
     ),
 ]
 

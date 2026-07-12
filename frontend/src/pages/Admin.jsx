@@ -274,7 +274,14 @@ function ContentTab({ token }) {
   const addService = () => {
     upd("services")([
       ...content.services,
-      { n: String(content.services.length + 1).padStart(2, "0"), icon: "/icons/land-boundary-survey.svg", t: "New Service", d: "Description…" },
+      {
+        n: String(content.services.length + 1).padStart(2, "0"),
+        key: "boundary",
+        t: "New Service",
+        d: "Description…",
+        photo: "",
+        alt: "",
+      },
     ]);
   };
   const removeService = (idx) => upd("services")(content.services.filter((_, i) => i !== idx));
@@ -336,16 +343,64 @@ function ContentTab({ token }) {
         {/* SERVICES */}
         <div className="cms-section">
           <h3>Services</h3>
-          <div className="sub">Six tiles · keep numbered 01–06 (or extend)</div>
+          <div className="sub">
+            Each card = number · title · description · Unsplash photo URL ·
+            alt text · lucide icon key
+            (<em>boundary, map, building, layers, ship, scan, radar, mountain,
+            drone, construction, satellite, ruler, activity, database</em>)
+          </div>
           {content.services.map((s, i) => (
-            <div key={i} className="cms-list-item" data-testid={`cms-service-${i}`}>
-              <input value={s.n} onChange={(e) => updService(i, "n", e.target.value)} placeholder="01" />
-              <div>
-                <input value={s.t} onChange={(e) => updService(i, "t", e.target.value)} placeholder="Title" style={{ marginBottom: 8 }} />
-                <input value={s.icon} onChange={(e) => updService(i, "icon", e.target.value)} placeholder="/icons/...svg" />
+            <div key={i} className="cms-service-item" data-testid={`cms-service-${i}`}>
+              <div className="row">
+                <input
+                  className="svc-n"
+                  value={s.n}
+                  onChange={(e) => updService(i, "n", e.target.value)}
+                  placeholder="01"
+                />
+                <input
+                  className="svc-key"
+                  value={s.key || ""}
+                  onChange={(e) => updService(i, "key", e.target.value)}
+                  placeholder="Icon key (e.g. boundary)"
+                />
+                <button className="admin-delete" onClick={() => removeService(i)}>Remove</button>
               </div>
-              <textarea value={s.d} onChange={(e) => updService(i, "d", e.target.value)} placeholder="Description" />
-              <button className="admin-delete" onClick={() => removeService(i)}>Remove</button>
+              <input
+                value={s.t}
+                onChange={(e) => updService(i, "t", e.target.value)}
+                placeholder="Title"
+              />
+              <textarea
+                value={s.d}
+                onChange={(e) => updService(i, "d", e.target.value)}
+                placeholder="Description (2–3 lines)"
+                rows={2}
+              />
+              <div className="row">
+                <input
+                  value={s.photo || ""}
+                  onChange={(e) => updService(i, "photo", e.target.value)}
+                  placeholder="Photo URL (Unsplash direct link)"
+                />
+                <UploadButton
+                  token={token}
+                  onUploaded={(url) => updService(i, "photo", url)}
+                  label="Upload"
+                />
+              </div>
+              <input
+                value={s.alt || ""}
+                onChange={(e) => updService(i, "alt", e.target.value)}
+                placeholder="Alt text for accessibility & SEO"
+              />
+              {s.photo && (
+                <img
+                  src={s.photo.startsWith("/api/uploads") ? `${process.env.REACT_APP_BACKEND_URL}${s.photo}` : s.photo}
+                  alt=""
+                  className="svc-preview"
+                />
+              )}
             </div>
           ))}
           <button className="cms-add-row" onClick={addService} data-testid="cms-add-service">+ Add Service</button>

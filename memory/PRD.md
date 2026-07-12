@@ -58,8 +58,7 @@ hidden `/admin` page to view and manage enquiries plus a full CMS.
 - PDF compression: 43.2 MB → 4.3 MB via Ghostscript (29 pages preserved).
 - Renamed legacy `Hero3D.jsx` → `HeroVideo.jsx`.
 
-### 2026-05-21 (session 3 — P1 + P3 + CMS)
-- **Auth hardening (P3)**:
+### 2026-05-21 (session 3 — P1 + P3 + CMS)- **Auth hardening (P3)**:
   - JWT (HS256, 24h) + bcrypt (cost 12) password hashing
   - `POST /api/auth/login` (email + password)
   - `GET /api/auth/me` (Bearer token)
@@ -86,8 +85,38 @@ hidden `/admin` page to view and manage enquiries plus a full CMS.
   Projects) with image upload component, sticky save bar, inline list
   editors for services / quals / manifesto words / values.
 
-## Test Status
-- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
+### 2026-05-21 (session 4 — Services v2 + polish)
+- **Hero sound toggle** — "Sound Off / Sound On" pill, bottom-left of
+  hero. Video swapped to `emergencehme.mp4` (with AAC audio); .webm
+  re-encoded with opus. Starts muted (autoplay compliance).
+- **Chat FAB → icon-only** — clean 56×56 gold circle with WhatsApp
+  glyph. Mirrors sound toggle position (both `bottom: clamp(20px, 2.4vw, 36px)`).
+- **Hero cleanup** — removed the gold horizontal divider under "HM
+  Geomatics" and the vertical "Discover" scroll cue for a cleaner
+  cinematic layout.
+- **Services v2 (Premium 3-column grid)**:
+  - Redesigned to a modern engineering-consultancy layout: 16:9
+    landscape photos, dark gradient overlay, gold accent line under
+    each title, outline lucide-react icon, "LEARN MORE ↗" button.
+  - Expanded from 6 → **14 services**: Land Boundary, Topographic,
+    Engineering, Cadastral, Hydrographic, LiDAR, Utility Detection,
+    Mining, Drone (UAV), Construction Monitoring, GNSS/GPS, As-Built,
+    Deformation Monitoring, GIS.
+  - Each card includes: number badge, lucide icon, title, gold accent
+    line, description, animated "Learn More" that scrolls to `#contact`
+    and prefills the enquiry subject with the service name.
+  - Curated Unsplash direct URLs (WebP + `w=1600&h=900&q=80`), lazy
+    loading, `async` decoding. All 14 URLs verified HTTP 200.
+  - Hover: 6% image zoom + saturation shift + gold accent line grows
+    30px → 60px + shadow elevation.
+  - Fade-up on scroll via `.reveal` IntersectionObserver.
+  - Responsive: 3-col ≥ 1080px → 2-col → 1-col ≤ 640px.
+  - **JSON-LD `ItemList` of `Service`** injected for SEO.
+  - CMS Content tab extended with per-service **photo URL**, **alt
+    text**, **lucide icon key** fields (upload button for local
+    hosting also included).
+
+## Test Status- `iteration_2.json` — **100% backend (19/19)**, **100% frontend (10/10)**,
   zero bugs.
 
 ## Prioritised Backlog
