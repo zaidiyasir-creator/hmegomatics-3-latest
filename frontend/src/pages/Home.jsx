@@ -4,43 +4,11 @@ import { toast } from "sonner";
 import Nav from "@/components/Nav";
 import HeroVideo from "@/components/HeroVideo";
 import {
-  Frame,
-  Map,
-  Building2,
-  Layers,
-  Ship,
-  ScanLine,
-  Radar,
-  Mountain,
-  Plane,
-  Construction,
-  Satellite,
-  Ruler,
-  Activity,
-  Database,
   ArrowUpRight,
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BACKEND = process.env.REACT_APP_BACKEND_URL;
-
-/* Lucide icon lookup by service key */
-const ICONS = {
-  boundary: Frame,
-  map: Map,
-  building: Building2,
-  layers: Layers,
-  ship: Ship,
-  scan: ScanLine,
-  radar: Radar,
-  mountain: Mountain,
-  drone: Plane,
-  construction: Construction,
-  satellite: Satellite,
-  ruler: Ruler,
-  activity: Activity,
-  database: Database,
-};
 
 /* Fallback content used if /api/content fails — keeps the site readable. */
 const FALLBACK = {
@@ -270,12 +238,14 @@ export default function Home() {
 
         <div className="services-v2-grid">
           {(c.services || []).map((s) => {
-            const Icon = ICONS[s.key] || Frame;
             const slug = (s.t || "")
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, "-")
               .replace(/(^-|-$)/g, "");
             const learnMoreHref = `#contact?service=${encodeURIComponent(s.t)}`;
+            const photo = s.photo && s.photo.startsWith("/api/uploads")
+              ? `${BACKEND}${s.photo}`
+              : s.photo;
             return (
               <article
                 key={s.n + s.t}
@@ -291,7 +261,6 @@ export default function Home() {
                     e.preventDefault();
                     const el = document.getElementById("contact");
                     if (el) el.scrollIntoView({ behavior: "smooth" });
-                    // Prefill subject in the enquiry form
                     setTimeout(() => {
                       const subj = document.querySelector('[data-testid="enquiry-subject"]');
                       if (subj) {
@@ -302,26 +271,19 @@ export default function Home() {
                   }}
                 >
                   <div className="svc-card-image">
-                    {s.photo && (
+                    {photo && (
                       <img
-                        src={s.photo}
+                        src={photo}
                         alt={s.alt || s.t}
                         loading="lazy"
                         decoding="async"
                       />
                     )}
-                    <div className="svc-card-gradient" aria-hidden="true" />
-                    <span className="svc-card-num" aria-hidden="true">{s.n}</span>
                   </div>
-                  <div className="svc-card-body">
-                    <div className="svc-card-icon" aria-hidden="true">
-                      <Icon size={22} strokeWidth={1.4} />
-                    </div>
-                    <h3>{s.t}</h3>
-                    <span className="svc-accent" aria-hidden="true" />
-                    <p>{s.d}</p>
-                    <span className="svc-learn">
-                      Learn More <ArrowUpRight size={14} strokeWidth={1.6} />
+                  <div className="svc-card-cta">
+                    <h3 className="sr-only">{s.t}</h3>
+                    <span className="svc-learn-btn">
+                      Learn More <ArrowUpRight size={14} strokeWidth={1.8} />
                     </span>
                   </div>
                 </a>
