@@ -158,6 +158,11 @@ class Service(BaseModel):
     photo: str = ""
     alt: str = ""
     key: str = ""  # lucide icon key: boundary|map|building|layers|ship|radar|drone|mountain|satellite|database|construction|utility|scan|activity
+    slug: str = ""  # URL slug e.g. "land-boundary-survey"
+    long_description: str = ""  # extended description for detail page
+    equipment: List[str] = Field(default_factory=list)
+    deliverables: List[str] = Field(default_factory=list)
+    standards: List[str] = Field(default_factory=list)
 
 
 class SiteContent(BaseModel):
@@ -226,6 +231,7 @@ class SiteContent(BaseModel):
     address_line3: str = "70100 Seremban, Negeri Sembilan, Malaysia"
     phone_office: str = "+606 761 0867"
     phone_director: str = "+6013 315 8958"
+    email: str = "hazwan@hmgeomatics.com"
     whatsapp_number: str = "60133158958"
     ssm: str = "SSM: 202401037321 (1583168-K)"
     ljt: str = "LJT Reg. No: LJT 617"
@@ -241,74 +247,119 @@ DEFAULT_SERVICES = [
     Service(
         n="01",
         key="boundary",
+        slug="land-boundary-survey",
         t="Land Boundary Survey",
         d="Accurate determination of legal land boundaries for subdivision, title transfer, development approvals and property ownership.",
         photo="/services/01_land_boundary_survey.webp",
         alt="HM Geomatics licensed surveyor using a total station on a land boundary",
+        long_description="Land boundary surveys precisely establish the legal limits of a property, forming the foundation for every land transaction, subdivision approval and development submission in Malaysia. Our team is licensed under Akta Juruukur Tanah Berlesen 1958 (Act 458) and registered with Lembaga Jurukur Tanah Malaysia, delivering boundary marking, re-establishment and pre-computation plans certified for submission to PTG, JUPEM and local planning authorities.",
+        equipment=["Leica TS16 total station", "Trimble R12i GNSS receiver", "Robotic tribrach + reflector prisms", "Digital theodolite (backup)"],
+        deliverables=["Certified boundary plan (Pelan Ukur)", "Coordinate list (GDM 2000)", "Photographic evidence of marker recovery", "Field survey report"],
+        standards=["JUPEM Cadastral Standards", "Akta Juruukur Tanah 1958 (Act 458, Rev. 2024)", "Peninsular Malaysia Datum (GDM 2000)"],
     ),
     Service(
         n="02",
         key="map",
+        slug="topographic-survey-mapping",
         t="Topographic Survey & Mapping",
         d="Detailed mapping of natural and man-made features supporting engineering design, planning and construction projects.",
         photo="/services/02_topographic_survey_mapping.webp",
         alt="Topographic survey and mapping — contour lines and terrain features",
+        long_description="Topographic surveys capture the three-dimensional character of a site — elevations, gradients, drainage, vegetation, structures and utilities — producing the base plans your architects and engineers rely on. We combine GNSS RTK, robotic total stations and UAV photogrammetry to deliver contour and detail mapping accurate enough for design-development and construction submission.",
+        equipment=["Leica TS16 robotic total station", "Trimble R12i GNSS (RTK)", "DJI Matrice 350 RTK UAV", "GPR for buried service overlay"],
+        deliverables=["Contour plan (0.25 m or 0.5 m intervals)", "Detail plan with feature codes", "Digital Terrain Model (DTM)", "3D CAD file (.dwg / .dgn)"],
+        standards=["Peninsular Malaysia Datum (GDM 2000)", "JKR / JUPEM survey specifications", "Client engineering specifications"],
     ),
     Service(
         n="03",
         key="building",
+        slug="engineering-survey",
         t="Engineering Survey",
         d="High-precision setting out, alignment and control surveys for buildings, roads, bridges and infrastructure projects.",
         photo="/services/03_engineering_survey.webp",
         alt="Engineering survey — precision setting out on a construction site",
+        long_description="Engineering surveys ensure that every column, foundation, kerb, invert and alignment on a construction site is set out to millimetre precision. Our surveyors establish primary control networks, transfer levels, monitor structural alignment and provide the as-built verification your consultants and CoW require throughout the project lifecycle.",
+        equipment=["Leica TS16 robotic total station (1″)", "Trimble R12i GNSS", "Digital precise level (Leica LS15)", "Prism poles + fixed reflectors"],
+        deliverables=["Site control network + coordinate list", "Setting-out plans", "Level book / benchmark register", "Fortnightly progress reports"],
+        standards=["JKR Design Standards", "BS 5606 Setting Out Tolerances", "ISO 4463 Measurement Methods for Building"],
     ),
     Service(
         n="04",
         key="layers",
+        slug="title-cadastral-survey",
         t="Title / Cadastral Survey",
         d="Boundary verification and cadastral documentation supporting subdivision, land registration and property ownership.",
         photo="/services/04_title_cadastral_survey.webp",
         alt="Title and cadastral survey — boundary verification and documentation",
+        long_description="Cadastral surveys formally document the legal footprint of a parcel for issuance of Geran Mukim, Pajakan or strata titles. HM Geomatics prepares Pre-Computation Plans (PCP), Certified Plans (CP) and strata layouts for submission to JUPEM and PTG. Every plan is signed off by our licensed land surveyor.",
+        equipment=["Leica TS16 total station", "Trimble R12i GNSS (RTK)", "JUPEM-approved cadastral software", "Field-to-finish coding workflow"],
+        deliverables=["Pre-Computation Plan (PCP)", "Certified Plan (CP)", "Strata / stratum plans", "Digital submission package for JUPEM e-Kadaster"],
+        standards=["JUPEM e-Kadaster specifications", "Akta Hakmilik Strata 1985", "National Land Code 1965"],
     ),
     Service(
         n="05",
         key="ship",
+        slug="hydrographic-survey",
         t="Hydrographic Survey",
         d="Bathymetric and hydrographic surveys for ports, rivers, coastal developments and offshore engineering projects.",
         photo="/services/05_hydrographic_survey.webp",
         alt="Hydrographic survey — bathymetric mapping on a survey vessel",
+        long_description="Hydrographic surveys reveal what lies beneath the waterline — riverbeds, harbour approaches, reclamation footprints and offshore project areas. Certified under FIG / IHO / ICA Category A standards, we deliver multibeam bathymetry, side-scan mosaics and precise tide-corrected volume calculations for ports, marinas and coastal engineering works.",
+        equipment=["Multibeam echosounder", "Motion Reference Unit (MRU)", "RTK GNSS with heading", "Sound velocity profiler + tide gauge"],
+        deliverables=["Bathymetric chart", "Side-scan sonar mosaic", "Volume / dredge calculation report", "IHO Special Order QC log"],
+        standards=["IHO S-44 Special Order", "FIG / IHO / ICA Category A", "IMCA S-014 Survey Standards"],
     ),
     Service(
         n="06",
         key="scan",
+        slug="lidar-survey",
         t="LiDAR Survey",
         d="High-resolution laser scanning for terrain modelling, asset documentation and infrastructure mapping.",
         photo="/services/06_lidar_survey.webp",
         alt="LiDAR survey — 3D laser scanning point cloud",
+        long_description="LiDAR delivers dense, geometrically accurate 3D point clouds of terrain, forest canopies, industrial plants and heritage structures — often in a fraction of the time of conventional survey. Our airborne and terrestrial LiDAR workflows produce classified deliverables ready for engineering design, BIM coordination and asset management.",
+        equipment=["Airborne LiDAR (payload)", "Terrestrial laser scanner (Leica RTC360)", "Mobile mapping backpack", "Ground control network via GNSS"],
+        deliverables=["Classified LAS / LAZ point cloud", "Digital Elevation & Terrain Models", "Feature-extracted CAD drawings", "Point-cloud viewer package"],
+        standards=["ASPRS LiDAR Standards", "USGS Lidar Base Specification v2.1", "Client BIM/CAD deliverable specs"],
     ),
     Service(
         n="07",
         key="radar",
+        slug="underground-utility-detection-mapping",
         t="Underground Utility Detection & Mapping",
         d="Accurate detection and mapping of underground utilities to minimise construction risks and prevent accidental damage.",
         photo="/services/07_underground_utility_detection_mapping.webp",
         alt="Underground utility detection and mapping with ground penetrating radar",
+        long_description="Undetected buried services are the single largest cause of avoidable construction incidents. Our utility detection combines electromagnetic locators and ground-penetrating radar (GPR) to trace metallic and non-metallic services, delivering a georeferenced 3D map of what lies beneath the surface — reducing strike risk and safeguarding programme.",
+        equipment=["Multi-frequency GPR", "Electromagnetic locator", "Utility tracer wire kit", "GNSS RTK positioning"],
+        deliverables=["Georeferenced utility plan", "PAS 128 Quality Level classification", "3D CAD utility model", "Site marking + photographic register"],
+        standards=["PAS 128:2022 Detection of Underground Utilities", "SUE Utility Quality Levels A–D", "TNB / IWK / SYABAS record checks"],
     ),
     Service(
         n="08",
         key="mountain",
+        slug="mining-survey",
         t="Mining Survey",
         d="Survey solutions for mining operations including stockpile measurement, volume calculations, compliance and monitoring.",
         photo="/services/08_mining_survey.webp",
         alt="Mining survey — open pit stockpile measurement",
+        long_description="From lease boundary establishment to periodic volume take-off and slope monitoring, our mining survey services support quarries, open-pit operations and reclamation projects. We combine UAV photogrammetry, terrestrial laser scanning and GNSS to deliver the reserves, movement and compliance data mining engineers rely on.",
+        equipment=["DJI Matrice 350 RTK UAV", "Terrestrial laser scanner", "Trimble R12i GNSS", "Robotic total station"],
+        deliverables=["Stockpile volume report", "Pit progression maps", "Slope monitoring dashboard", "Reclamation as-built plans"],
+        standards=["JMG (Minerals & Geoscience) reporting", "AS 3798 (earthworks fill certification)", "Client mine plan compliance"],
     ),
     Service(
         n="09",
         key="drone",
+        slug="drone-survey-uav",
         t="Drone Survey (UAV)",
         d="Professional UAV aerial mapping, photogrammetry and site monitoring for fast, safe and cost-effective geospatial data collection.",
         photo="/services/09_drone_survey_uav.webp",
         alt="Drone survey (UAV) — aerial photogrammetry over a project site",
+        long_description="UAV surveys deliver up-to-date aerial imagery and photogrammetric mapping at a fraction of the time and cost of ground-based methods. Our CAAM-registered pilots fly RTK-equipped platforms to produce centimetre-accurate orthomosaics, DSMs and progress reels for planning, construction and monitoring.",
+        equipment=["DJI Matrice 350 RTK", "DJI Mavic 3 Enterprise", "DJI Terra & Pix4D processing", "GCP kit with RTK base"],
+        deliverables=["High-resolution orthomosaic (GSD ≤ 2 cm)", "Digital Surface Model (DSM)", "3D textured mesh", "Progress video / time-lapse"],
+        standards=["CAAM UAS Operations (Part IX)", "ASPRS Positional Accuracy", "Client mapping accuracy specs"],
     ),
 ]
 
@@ -462,6 +513,16 @@ async def get_content() -> dict:
         # Should not happen because seed_content runs at startup
         return SiteContent(services=DEFAULT_SERVICES).model_dump()
     return doc
+
+
+@api_router.get("/services/{slug}")
+async def get_service_by_slug(slug: str) -> dict:
+    doc = await db.content.find_one({"key": "site"}, {"_id": 0, "services": 1})
+    services = (doc or {}).get("services", [])
+    for s in services:
+        if (s.get("slug") or "") == slug:
+            return s
+    raise HTTPException(status_code=404, detail="Service not found")
 
 
 @api_router.get("/projects", response_model=List[Project])

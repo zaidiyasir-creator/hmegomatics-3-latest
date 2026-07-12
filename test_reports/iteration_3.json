@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 3 focused on new features: /api/services/{slug}, 9 enriched services (slug/long_description/equipment/deliverables/standards), new 'email' field on /api/content, /services/:slug detail page, contact-email link on Home, and CMS editors for the new fields. Backend: 16/16 new pytest tests pass + 19/19 v2 regression tests still pass. Frontend E2E: contact-email-link visible & correct, all 9 Home service cards navigate to /services/<slug>, detail page renders hero+H1+lede+3-col grid+CTA+mailto+inline form+related+footer+JSON-LD Service schema, enquiry POST prefills subject=service name, related-card navigation switches page (H1 updates ~300ms after route change), back button returns to /#services, unknown slug shows 'Service not found' with back link, Admin CMS shows cms-email field + slug/long_description/equipment/deliverables/standards editors for all 9 services and saves correctly to /api/content.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_hmgeomatics_v3.py",
+    "/app/backend/tests/test_hmgeomatics_v2.py",
+    "/app/test_reports/pytest/pytest_v3_results.xml"
+  ],
+  "action_items": [
+    "(Optional / UX polish) On ServiceDetail, when the :slug param changes (via related-card nav), the previous service's title/hero briefly remain on screen while the new fetch is in-flight (~300ms). Consider setService(null)+setContent still-valid before the fetch, or a skeleton, so the transition is not stale. Not blocking; the URL and state resolve correctly.",
+    "(Optional) seed_content() only inserts if missing — if backwards-migrating an old DB that already had 5-service content, the new 9-service default won't apply. In this environment services were reseeded correctly; note for future prod migrations."
+  ],
+  "critical_code_review_comments": [
+    "ServiceDetail.jsx uses `dangerouslySetInnerHTML` for JSON-LD — content is server-derived (title/description) but rendered via JSON.stringify, so XSS surface is minimal. Fine.",
+    "Home.jsx no longer scrolls to #contact on service card click — correct; the anchor removal is complete and hrefs are /services/<slug>.",
+    "server.py get_service_by_slug does a full content read on every call (single doc, OK). Consider a projection on services.slug for a tiny speedup.",
+    "SiteContent.email default is 'hazwan@hmgeomatics.com' and EMAIL_TO in .env matches — good consistency; but the SMTP module reads EMAIL_TO from env not from content.email, so editing the CMS email won't change where SMTP notifications go. Confirm expected behaviour: CMS email is the *public/display* address; SMTP notifications route via EMAIL_TO env only."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_hmgeomatics_v3.py"
+  ],
+  "success_rate": {"backend": "100% (16/16 v3 + 19/19 v2 regression)", "frontend": "100% (all listed flows verified)"},
+  "test_credentials": "admin@hmgeomatics.com / hmgeomatics2026 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Created TEST_v3_UI + TEST_v3_User enquiries during backend + UI tests, all cleaned up via test_zz_cleanup_v3. Restored SiteContent.email to original 'hazwan@hmgeomatics.com' after CMS edit tests.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression tests at /app/backend/tests/test_hmgeomatics_v2.py (auth/CMS/projects/upload/enquiries). New feature tests at /app/backend/tests/test_hmgeomatics_v3.py (email field, 9-service schema, /api/services/{slug}, admin PUT email persistence). Frontend selectors added in iteration 3: contact-email-link (Home), detail-back / svc-form-name / svc-form-email / svc-form-message / svc-form-submit / back-to-services / service-detail-<slug> (ServiceDetail), related-<slug> (related card), cms-email (Admin content tab). ServiceDetail keeps stale H1 for ~300ms after related-card click before re-render — poll or wait 500ms if asserting on H1 change. All 9 expected slugs: land-boundary-survey, topographic-survey-mapping, engineering-survey, title-cadastral-survey, hydrographic-survey, lidar-survey, underground-utility-detection-mapping, mining-survey, drone-survey-uav. Note: 'precision-dark-hero' in the review request appears to be a misquoted preview-URL name; the actual endpoint pattern is /api/services/{slug} and works for all 9 slugs above.",
+  "rca of the issue": "No bugs found. Backend correctly seeds 9 rich services with all new fields; /api/services/{slug} returns 200 for valid slugs and 404 otherwise; /api/content includes 'email' field. Frontend router registers /services/:slug → ServiceDetail; Home service cards use React Router <Link> to /services/<slug> (no longer scroll-to-contact); ServiceDetail renders hero image, H1, 3-col grid, dark CTA with mailto:hazwan@hmgeomatics.com and phones, inline enquiry form that POSTs to /api/enquiries with subject={service.t}, 3 related cards, JSON-LD Service schema, and footer. Admin CMS has new cms-email field and all 5 new service editors (slug/long_description/equipment[]/deliverables[]/standards[]) that persist correctly."
+}

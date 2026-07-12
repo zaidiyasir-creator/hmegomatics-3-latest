@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
 import Sitemap from "@/pages/Sitemap";
+import ServiceDetail from "@/pages/ServiceDetail";
 import { Toaster } from "sonner";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/sitemap" element={<Sitemap />} />
         </Routes>

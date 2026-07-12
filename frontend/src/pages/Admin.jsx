@@ -371,17 +371,28 @@ function ContentTab({ token }) {
                 onChange={(e) => updService(i, "t", e.target.value)}
                 placeholder="Title"
               />
+              <input
+                value={s.slug || ""}
+                onChange={(e) => updService(i, "slug", e.target.value)}
+                placeholder="URL slug (e.g. land-boundary-survey — used at /services/<slug>)"
+              />
               <textarea
                 value={s.d}
                 onChange={(e) => updService(i, "d", e.target.value)}
-                placeholder="Description (2–3 lines)"
+                placeholder="Short description (2–3 lines, shown on the home services grid)"
                 rows={2}
+              />
+              <textarea
+                value={s.long_description || ""}
+                onChange={(e) => updService(i, "long_description", e.target.value)}
+                placeholder="Long description (shown on the /services/<slug> page)"
+                rows={4}
               />
               <div className="row">
                 <input
                   value={s.photo || ""}
                   onChange={(e) => updService(i, "photo", e.target.value)}
-                  placeholder="Photo URL (Unsplash direct link)"
+                  placeholder="Photo URL"
                 />
                 <UploadButton
                   token={token}
@@ -393,6 +404,24 @@ function ContentTab({ token }) {
                 value={s.alt || ""}
                 onChange={(e) => updService(i, "alt", e.target.value)}
                 placeholder="Alt text for accessibility & SEO"
+              />
+              <textarea
+                value={(s.equipment || []).join("\n")}
+                onChange={(e) => updService(i, "equipment", e.target.value.split("\n").filter(Boolean))}
+                placeholder="Equipment (one per line — shown on detail page)"
+                rows={3}
+              />
+              <textarea
+                value={(s.deliverables || []).join("\n")}
+                onChange={(e) => updService(i, "deliverables", e.target.value.split("\n").filter(Boolean))}
+                placeholder="Deliverables (one per line — shown on detail page)"
+                rows={3}
+              />
+              <textarea
+                value={(s.standards || []).join("\n")}
+                onChange={(e) => updService(i, "standards", e.target.value.split("\n").filter(Boolean))}
+                placeholder="Standards (one per line — shown on detail page)"
+                rows={3}
               />
               {s.photo && (
                 <img
@@ -476,6 +505,7 @@ function ContentTab({ token }) {
         <TextField label="Address Line 3" value={content.address_line3} onChange={upd("address_line3")} full />
         <TextField label="Phone (Office)" value={content.phone_office} onChange={upd("phone_office")} />
         <TextField label="Phone (Director)" value={content.phone_director} onChange={upd("phone_director")} />
+        <TextField label="Email" value={content.email} onChange={upd("email")} testid="cms-email" hint="Where enquiries appear + shown in the contact section" />
         <TextField label="WhatsApp Number (digits only)" value={content.whatsapp_number} onChange={upd("whatsapp_number")} hint="e.g. 60133158958" />
         <TextField label="SSM" value={content.ssm} onChange={upd("ssm")} />
         <TextField label="LJT Reg." value={content.ljt} onChange={upd("ljt")} />

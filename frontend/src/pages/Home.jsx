@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import Nav from "@/components/Nav";
 import HeroVideo from "@/components/HeroVideo";
 import {
@@ -54,6 +55,7 @@ const FALLBACK = {
   address_line3: "70100 Seremban, Negeri Sembilan, Malaysia",
   phone_office: "+606 761 0867",
   phone_director: "+6013 315 8958",
+  email: "hazwan@hmgeomatics.com",
   whatsapp_number: "60133158958",
   ssm: "SSM: 202401037321 (1583168-K)",
   ljt: "LJT Reg. No: LJT 617",
@@ -238,11 +240,10 @@ export default function Home() {
 
         <div className="services-v2-grid">
           {(c.services || []).map((s) => {
-            const slug = (s.t || "")
+            const slug = s.slug || (s.t || "")
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, "-")
               .replace(/(^-|-$)/g, "");
-            const learnMoreHref = `#contact?service=${encodeURIComponent(s.t)}`;
             const photo = s.photo && s.photo.startsWith("/api/uploads")
               ? `${BACKEND}${s.photo}`
               : s.photo;
@@ -253,22 +254,10 @@ export default function Home() {
                 data-testid={`service-${s.n}`}
                 data-service-slug={slug}
               >
-                <a
-                  href={learnMoreHref}
+                <Link
+                  to={`/services/${slug}`}
                   className="svc-card-inner"
                   aria-label={`${s.t} — Learn more`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const el = document.getElementById("contact");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                    setTimeout(() => {
-                      const subj = document.querySelector('[data-testid="enquiry-subject"]');
-                      if (subj) {
-                        subj.value = s.t;
-                        subj.dispatchEvent(new Event("input", { bubbles: true }));
-                      }
-                    }, 500);
-                  }}
                 >
                   <div className="svc-card-image">
                     {photo && (
@@ -286,7 +275,7 @@ export default function Home() {
                       Learn More <ArrowUpRight size={14} strokeWidth={1.8} />
                     </span>
                   </div>
-                </a>
+                </Link>
               </article>
             );
           })}
@@ -466,6 +455,16 @@ export default function Home() {
                 data-testid="inline-whatsapp-link"
               >
                 WhatsApp →
+              </a>
+            </div>
+            <div className="contact-block">
+              <span className="contact-label">Email</span>
+              <a
+                href={`mailto:${c.email}`}
+                style={{ color: "var(--gold)", textDecoration: "none", fontWeight: 500, letterSpacing: "0.02em" }}
+                data-testid="contact-email-link"
+              >
+                {c.email}
               </a>
             </div>
             <EnquiryForm />
