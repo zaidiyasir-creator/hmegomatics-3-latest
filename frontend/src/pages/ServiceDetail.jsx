@@ -277,7 +277,7 @@ export default function ServiceDetail() {
             </h2>
             <span className="gold-bar" />
             <p>
-              Send a short brief and our director will respond within two working days.
+              Send a short brief and our team will respond within two working days.
               For urgent matters, WhatsApp is the fastest route.
             </p>
             <div className="svc-detail-contact">
