@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import Nav from "@/components/Nav";
+import ChatFab from "@/components/ChatFab";
 import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -331,6 +332,12 @@ export default function ServiceDetail() {
           <span>{content.ssm}</span>
         </span>
       </footer>
+
+      {/* Floating WhatsApp chat FAB */}
+      <ChatFab
+        whatsappNumber={content.whatsapp_number}
+        serviceName={service.t}
+      />
     </div>
   );
 }
