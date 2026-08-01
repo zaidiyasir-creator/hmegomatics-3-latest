@@ -233,11 +233,13 @@ class SiteContent(BaseModel):
     phone_director: str = "+6013 315 8958"
     email: str = "hazwan@hmgeomatics.com"
     whatsapp_number: str = "60133158958"
-    ssm: str = "SSM: 202401037321 (1583168-K)"
-    ljt: str = "LJT Reg. No: LJT 617"
-    mof: str = "MOF Cert: J10961822104057517"
-    cert_validity: str = "Valid: 10/01/2025 – 09/01/2028"
-    practice_cert: str = "Practice Name Cert No: 01170"
+    ssm: str = "Suruhanjaya Syarikat Malaysia (SSM)"
+    ljt: str = "Lembaga Jurukur Tanah (LJT)"
+    mof: str = "Kementerian Kewangan (MoF)"
+    cert_validity: str = "Kastam Diraja Malaysia (Custom)"
+    practice_cert: str = (
+        "Certificate in Underground Utility Detection and Survey"
+    )
     hours: str = (
         "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment"
     )

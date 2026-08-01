@@ -58,11 +58,11 @@ const FALLBACK = {
   phone_director: "+6013 315 8958",
   email: "hazwan@hmgeomatics.com",
   whatsapp_number: "60133158958",
-  ssm: "SSM: 202401037321 (1583168-K)",
-  ljt: "LJT Reg. No: LJT 617",
-  mof: "MOF Cert: J10961822104057517",
-  cert_validity: "Valid: 10/01/2025 – 09/01/2028",
-  practice_cert: "Practice Name Cert No: 01170",
+  ssm: "Suruhanjaya Syarikat Malaysia (SSM)",
+  ljt: "Lembaga Jurukur Tanah (LJT)",
+  mof: "Kementerian Kewangan (MoF)",
+  cert_validity: "Kastam Diraja Malaysia (Custom)",
+  practice_cert: "Certificate in Underground Utility Detection and Survey",
   hours: "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment",
 };
 
@@ -482,7 +482,8 @@ export default function Home() {
             <div className="contact-block">
               <span className="contact-label">Certification</span>
               Licensed under Akta Juruukur Tanah Berlesen 1958<br />
-              Registered with Lembaga Jurukur Tanah Malaysia<br />
+              Registered with Lembaga Jurukur Tanah<br />
+              FIG/IHO/ICA Category A Level<br />
               {c.practice_cert}
             </div>
             <div className="contact-block">

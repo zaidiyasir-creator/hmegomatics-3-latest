@@ -507,11 +507,11 @@ function ContentTab({ token }) {
         <TextField label="Phone (Director)" value={content.phone_director} onChange={upd("phone_director")} />
         <TextField label="Email" value={content.email} onChange={upd("email")} testid="cms-email" hint="Where enquiries appear + shown in the contact section" />
         <TextField label="WhatsApp Number (digits only)" value={content.whatsapp_number} onChange={upd("whatsapp_number")} hint="e.g. 60133158958" />
-        <TextField label="SSM" value={content.ssm} onChange={upd("ssm")} />
-        <TextField label="LJT Reg." value={content.ljt} onChange={upd("ljt")} />
-        <TextField label="MOF Cert." value={content.mof} onChange={upd("mof")} />
-        <TextField label="Cert validity" value={content.cert_validity} onChange={upd("cert_validity")} />
-        <TextField label="Practice Cert." value={content.practice_cert} onChange={upd("practice_cert")} full />
+        <TextField label="SSM (full name)" value={content.ssm} onChange={upd("ssm")} />
+        <TextField label="LJT (full name)" value={content.ljt} onChange={upd("ljt")} />
+        <TextField label="MoF (full name)" value={content.mof} onChange={upd("mof")} />
+        <TextField label="Custom / 4th agency (full name)" value={content.cert_validity} onChange={upd("cert_validity")} />
+        <TextField label="Additional Certification (e.g. Underground Utility)" value={content.practice_cert} onChange={upd("practice_cert")} full />
         <TextArea label="Hours" value={content.hours} onChange={upd("hours")} rows={2} />
       </div>
 
