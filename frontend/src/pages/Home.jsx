@@ -63,7 +63,7 @@ const FALLBACK = {
   mof: "MOF Cert: J10961822104057517",
   cert_validity: "Valid: 10/01/2025 – 09/01/2028",
   practice_cert: "Practice Name Cert No: 01170",
-  hours: "Monday — Friday · 09:00 – 18:00 MYT · Field visits arranged by appointment",
+  hours: "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment",
 };
 
 const resolveImg = (src) => {

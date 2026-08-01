@@ -239,7 +239,7 @@ class SiteContent(BaseModel):
     cert_validity: str = "Valid: 10/01/2025 – 09/01/2028"
     practice_cert: str = "Practice Name Cert No: 01170"
     hours: str = (
-        "Monday — Friday · 09:00 – 18:00 MYT · Field visits arranged by appointment"
+        "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment"
     )
 
 
