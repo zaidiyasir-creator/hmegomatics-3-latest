@@ -43,7 +43,7 @@ logger = logging.getLogger("hm-geomatics")
 
 # Bump this whenever DEFAULT_SERVICES copy/structure changes and you want
 # production DBs to force-refresh on next backend restart.
-CONTENT_VERSION = 2
+CONTENT_VERSION = 3
 
 
 # ---------------- Mongo ----------------
@@ -282,7 +282,7 @@ DEFAULT_SERVICES = [
         long_description="Topographic surveys capture the three-dimensional character of a site — elevations, gradients, drainage, vegetation, structures and utilities — producing the base plans your architects and engineers rely on. We combine GNSS RTK, robotic total stations and UAV photogrammetry to deliver contour and detail mapping accurate enough for design-development and construction submission.",
         equipment=["Latest survey-grade instrumentation"],
         deliverables=["Survey plan with natural and man-made features", "Contour plan", "Detail plan with feature codes", "Digital Terrain Model (DTM)", "3D CAD file (.dwg / .dgn)"],
-        standards=["Peninsular Malaysia Datum (GDM 2000)", "JKR / JUPEM survey specifications", "Client engineering specifications"],
+        standards=["JUPEM survey regulations", "Client engineering specifications"],
     ),
     Service(
         n="03",
