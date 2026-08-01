@@ -41,6 +41,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger("hm-geomatics")
 
+# Bump this whenever DEFAULT_SERVICES copy/structure changes and you want
+# production DBs to force-refresh on next backend restart.
+CONTENT_VERSION = 2
+
 
 # ---------------- Mongo ----------------
 client = AsyncIOMotorClient(os.environ["MONGO_URL"])
@@ -263,7 +267,7 @@ DEFAULT_SERVICES = [
         photo="/services/01_land_boundary_survey.webp",
         alt="HM Geomatics licensed surveyor using a total station on a land boundary",
         long_description="Land boundary surveys precisely establish the legal limits of a property, forming the foundation for every land transaction, subdivision approval and development submission in Malaysia. Our team is licensed under Akta Juruukur Tanah Berlesen 1958 (Act 458) and registered with Lembaga Jurukur Tanah Malaysia, delivering boundary marking, re-establishment and pre-computation plans certified for submission to PTG, JUPEM and local planning authorities.",
-        equipment=["Leica TS16 total station", "Trimble R12i GNSS receiver", "Robotic tribrach + reflector prisms", "Digital theodolite (backup)"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Certified boundary plan (Pelan Ukur)", "Coordinate list (GDM 2000)", "Photographic evidence of marker recovery", "Field survey report"],
         standards=["JUPEM Cadastral Standards", "Akta Juruukur Tanah 1958 (Act 458, Rev. 2024)", "Peninsular Malaysia Datum (GDM 2000)"],
     ),
@@ -276,8 +280,8 @@ DEFAULT_SERVICES = [
         photo="/services/02_topographic_survey_mapping.webp",
         alt="Topographic survey and mapping — contour lines and terrain features",
         long_description="Topographic surveys capture the three-dimensional character of a site — elevations, gradients, drainage, vegetation, structures and utilities — producing the base plans your architects and engineers rely on. We combine GNSS RTK, robotic total stations and UAV photogrammetry to deliver contour and detail mapping accurate enough for design-development and construction submission.",
-        equipment=["Leica TS16 robotic total station", "Trimble R12i GNSS (RTK)", "DJI Matrice 350 RTK UAV", "GPR for buried service overlay"],
-        deliverables=["Contour plan (0.25 m or 0.5 m intervals)", "Detail plan with feature codes", "Digital Terrain Model (DTM)", "3D CAD file (.dwg / .dgn)"],
+        equipment=["Latest survey-grade instrumentation"],
+        deliverables=["Survey plan with natural and man-made features", "Contour plan", "Detail plan with feature codes", "Digital Terrain Model (DTM)", "3D CAD file (.dwg / .dgn)"],
         standards=["Peninsular Malaysia Datum (GDM 2000)", "JKR / JUPEM survey specifications", "Client engineering specifications"],
     ),
     Service(
@@ -289,7 +293,7 @@ DEFAULT_SERVICES = [
         photo="/services/03_engineering_survey.webp",
         alt="Engineering survey — precision setting out on a construction site",
         long_description="Engineering surveys ensure that every column, foundation, kerb, invert and alignment on a construction site is set out to millimetre precision. Our surveyors establish primary control networks, transfer levels, monitor structural alignment and provide the as-built verification your consultants and CoW require throughout the project lifecycle.",
-        equipment=["Leica TS16 robotic total station (1″)", "Trimble R12i GNSS", "Digital precise level (Leica LS15)", "Prism poles + fixed reflectors"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Site control network + coordinate list", "Setting-out plans", "Level book / benchmark register", "Fortnightly progress reports"],
         standards=["JKR Design Standards", "BS 5606 Setting Out Tolerances", "ISO 4463 Measurement Methods for Building"],
     ),
@@ -302,7 +306,7 @@ DEFAULT_SERVICES = [
         photo="/services/04_title_cadastral_survey.webp",
         alt="Title and cadastral survey — boundary verification and documentation",
         long_description="Cadastral surveys formally document the legal footprint of a parcel for issuance of Geran Mukim, Pajakan or strata titles. HM Geomatics prepares Pre-Computation Plans (PCP), Certified Plans (CP) and strata layouts for submission to JUPEM and PTG. Every plan is signed off by our licensed land surveyor.",
-        equipment=["Leica TS16 total station", "Trimble R12i GNSS (RTK)", "JUPEM-approved cadastral software", "Field-to-finish coding workflow"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Pre-Computation Plan (PCP)", "Certified Plan (CP)", "Strata / stratum plans", "Digital submission package for JUPEM e-Kadaster"],
         standards=["JUPEM e-Kadaster specifications", "Akta Hakmilik Strata 1985", "National Land Code 1965"],
     ),
@@ -315,7 +319,7 @@ DEFAULT_SERVICES = [
         photo="/services/05_hydrographic_survey.webp",
         alt="Hydrographic survey — bathymetric mapping on a survey vessel",
         long_description="Hydrographic surveys reveal what lies beneath the waterline — riverbeds, harbour approaches, reclamation footprints and offshore project areas. Certified under FIG / IHO / ICA Category A standards, we deliver multibeam bathymetry, side-scan mosaics and precise tide-corrected volume calculations for ports, marinas and coastal engineering works.",
-        equipment=["Multibeam echosounder", "Motion Reference Unit (MRU)", "RTK GNSS with heading", "Sound velocity profiler + tide gauge"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Bathymetric chart", "Side-scan sonar mosaic", "Volume / dredge calculation report", "IHO Special Order QC log"],
         standards=["IHO S-44 Special Order", "FIG / IHO / ICA Category A", "IMCA S-014 Survey Standards"],
     ),
@@ -328,7 +332,7 @@ DEFAULT_SERVICES = [
         photo="/services/06_lidar_survey.webp",
         alt="LiDAR survey — 3D laser scanning point cloud",
         long_description="LiDAR delivers dense, geometrically accurate 3D point clouds of terrain, forest canopies, industrial plants and heritage structures — often in a fraction of the time of conventional survey. Our airborne and terrestrial LiDAR workflows produce classified deliverables ready for engineering design, BIM coordination and asset management.",
-        equipment=["Airborne LiDAR (payload)", "Terrestrial laser scanner (Leica RTC360)", "Mobile mapping backpack", "Ground control network via GNSS"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Classified LAS / LAZ point cloud", "Digital Elevation & Terrain Models", "Feature-extracted CAD drawings", "Point-cloud viewer package"],
         standards=["ASPRS LiDAR Standards", "USGS Lidar Base Specification v2.1", "Client BIM/CAD deliverable specs"],
     ),
@@ -341,7 +345,7 @@ DEFAULT_SERVICES = [
         photo="/services/07_underground_utility_detection_mapping.webp",
         alt="Underground utility detection and mapping with ground penetrating radar",
         long_description="Undetected buried services are the single largest cause of avoidable construction incidents. Our utility detection combines electromagnetic locators and ground-penetrating radar (GPR) to trace metallic and non-metallic services, delivering a georeferenced 3D map of what lies beneath the surface — reducing strike risk and safeguarding programme.",
-        equipment=["Multi-frequency GPR", "Electromagnetic locator", "Utility tracer wire kit", "GNSS RTK positioning"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Georeferenced utility plan", "PAS 128 Quality Level classification", "3D CAD utility model", "Site marking + photographic register"],
         standards=["PAS 128:2022 Detection of Underground Utilities", "SUE Utility Quality Levels A–D", "TNB / IWK / SYABAS record checks"],
     ),
@@ -354,7 +358,7 @@ DEFAULT_SERVICES = [
         photo="/services/08_mining_survey.webp",
         alt="Mining survey — open pit stockpile measurement",
         long_description="From lease boundary establishment to periodic volume take-off and slope monitoring, our mining survey services support quarries, open-pit operations and reclamation projects. We combine UAV photogrammetry, terrestrial laser scanning and GNSS to deliver the reserves, movement and compliance data mining engineers rely on.",
-        equipment=["DJI Matrice 350 RTK UAV", "Terrestrial laser scanner", "Trimble R12i GNSS", "Robotic total station"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["Stockpile volume report", "Pit progression maps", "Slope monitoring dashboard", "Reclamation as-built plans"],
         standards=["JMG (Minerals & Geoscience) reporting", "AS 3798 (earthworks fill certification)", "Client mine plan compliance"],
     ),
@@ -367,7 +371,7 @@ DEFAULT_SERVICES = [
         photo="/services/09_drone_survey_uav.webp",
         alt="Drone survey (UAV) — aerial photogrammetry over a project site",
         long_description="UAV surveys deliver up-to-date aerial imagery and photogrammetric mapping at a fraction of the time and cost of ground-based methods. Our CAAM-registered pilots fly RTK-equipped platforms to produce centimetre-accurate orthomosaics, DSMs and progress reels for planning, construction and monitoring.",
-        equipment=["DJI Matrice 350 RTK", "DJI Mavic 3 Enterprise", "DJI Terra & Pix4D processing", "GCP kit with RTK base"],
+        equipment=["Latest survey-grade instrumentation"],
         deliverables=["High-resolution orthomosaic (GSD ≤ 2 cm)", "Digital Surface Model (DSM)", "3D textured mesh", "Progress video / time-lapse"],
         standards=["CAAM UAS Operations (Part IX)", "ASPRS Positional Accuracy", "Client mapping accuracy specs"],
     ),
@@ -476,18 +480,20 @@ async def seed_content() -> None:
     if existing is None:
         doc = SiteContent(services=DEFAULT_SERVICES).model_dump()
         doc["key"] = "site"
+        doc["content_version"] = CONTENT_VERSION
         await db.content.insert_one(doc)
-        logger.info("Seeded default site content")
+        logger.info("Seeded default site content (v%s)", CONTENT_VERSION)
         return
 
     # ---- Migration: upgrade stale content docs to the latest schema ----
     # This preserves the user's edited copy while ensuring new fields exist.
     updates: Dict[str, Any] = {}
 
-    # 1) Services: if list is short, or ANY service is missing new fields
-    #    (slug / photo / long_description), replace with DEFAULT_SERVICES.
+    # 1) Services: upgrade if any structural change (new fields OR bumped
+    #    CONTENT_VERSION signalling a copy refresh).
     services = existing.get("services") or []
     default_slugs = {s.slug for s in DEFAULT_SERVICES}
+    stored_version = existing.get("content_version", 0)
     needs_service_upgrade = (
         len(services) < len(DEFAULT_SERVICES)
         or any(
@@ -495,11 +501,12 @@ async def seed_content() -> None:
             for s in services
         )
         or not {s.get("slug", "") for s in services}.issuperset(default_slugs)
+        or stored_version < CONTENT_VERSION
     )
     if needs_service_upgrade:
         updates["services"] = [s.model_dump() for s in DEFAULT_SERVICES]
 
-    # 2) Ensure new top-level field(s) exist (email, etc.)
+    # 2) Ensure new top-level field(s) exist (email, certifications, etc.)
     defaults = SiteContent().model_dump()
     for key, default_value in defaults.items():
         if key == "services":
@@ -508,10 +515,13 @@ async def seed_content() -> None:
             updates[key] = default_value
 
     if updates:
+        updates["content_version"] = CONTENT_VERSION
         updates["migrated_at"] = datetime.now(timezone.utc).isoformat()
         await db.content.update_one({"key": "site"}, {"$set": updates})
         logger.info(
-            "Migrated site content — updated keys: %s", ", ".join(updates.keys())
+            "Migrated site content to v%s — updated keys: %s",
+            CONTENT_VERSION,
+            ", ".join(updates.keys()),
         )
 
 
