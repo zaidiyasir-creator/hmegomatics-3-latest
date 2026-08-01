@@ -63,6 +63,12 @@ const FALLBACK = {
   mof: "Kementerian Kewangan (MoF)",
   cert_validity: "Kastam Diraja Malaysia (Custom)",
   practice_cert: "Certificate in Underground Utility Detection and Survey",
+  certifications: [
+    "Licensed under Akta Juruukur Tanah Berlesen 1958",
+    "Registered with Lembaga Jurukur Tanah",
+    "FIG/IHO/ICA Category A Level",
+    "Certificate in Underground Utility Detection and Survey",
+  ],
   hours: "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment",
 };
 
@@ -481,10 +487,12 @@ export default function Home() {
             </div>
             <div className="contact-block">
               <span className="contact-label">Certification</span>
-              Licensed under Akta Juruukur Tanah Berlesen 1958<br />
-              Registered with Lembaga Jurukur Tanah<br />
-              FIG/IHO/ICA Category A Level<br />
-              {c.practice_cert}
+              {(c.certifications || []).map((line, i) => (
+                <span key={i} data-testid={`certification-${i}`}>
+                  {line}
+                  {i < (c.certifications || []).length - 1 && <br />}
+                </span>
+              ))}
             </div>
             <div className="contact-block">
               <span className="contact-label">Hours</span>

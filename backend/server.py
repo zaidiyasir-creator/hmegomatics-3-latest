@@ -240,6 +240,14 @@ class SiteContent(BaseModel):
     practice_cert: str = (
         "Certificate in Underground Utility Detection and Survey"
     )
+    certifications: List[str] = Field(
+        default_factory=lambda: [
+            "Licensed under Akta Juruukur Tanah Berlesen 1958",
+            "Registered with Lembaga Jurukur Tanah",
+            "FIG/IHO/ICA Category A Level",
+            "Certificate in Underground Utility Detection and Survey",
+        ]
+    )
     hours: str = (
         "Monday — Friday · 08:30 – 17:30 MYT · Field visits arranged by appointment"
     )

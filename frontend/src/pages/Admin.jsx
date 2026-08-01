@@ -511,7 +511,20 @@ function ContentTab({ token }) {
         <TextField label="LJT (full name)" value={content.ljt} onChange={upd("ljt")} />
         <TextField label="MoF (full name)" value={content.mof} onChange={upd("mof")} />
         <TextField label="Custom / 4th agency (full name)" value={content.cert_validity} onChange={upd("cert_validity")} />
-        <TextField label="Additional Certification (e.g. Underground Utility)" value={content.practice_cert} onChange={upd("practice_cert")} full />
+        <div className="cms-field full">
+          <label>Certification (one entry per line)</label>
+          <textarea
+            rows={5}
+            value={(content.certifications || []).join("\n")}
+            onChange={(e) =>
+              upd("certifications")(e.target.value.split("\n").filter(Boolean))
+            }
+            data-testid="cms-certifications"
+          />
+          <span className="hint">
+            Every line becomes a row in the public Certification block.
+          </span>
+        </div>
         <TextArea label="Hours" value={content.hours} onChange={upd("hours")} rows={2} />
       </div>
 
